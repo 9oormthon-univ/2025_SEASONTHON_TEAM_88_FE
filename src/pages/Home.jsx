@@ -1,5 +1,3 @@
-// src/app/page.js (또는 src/pages/index.js)
-
 import React from 'react';
 
 const Home = () => {

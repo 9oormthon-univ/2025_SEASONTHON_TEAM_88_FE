@@ -1,0 +1,28 @@
+name: 'Issue'
+description: '간단한 이슈 작성용 템플릿'
+title: '[ISSUE] '
+labels: ['task']
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 📌 개요
+      description: 이슈의 핵심 내용을 간단히 적어주세요.
+      placeholder: 'ex) 로그인 버튼 UI 수정 필요'
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: 📄 상세 설명
+      description: 필요한 작업이나 배경 설명을 적어주세요.
+      placeholder: 'ex) 버튼 색상을 Figma 디자인에 맞춰 변경'
+
+  - type: checkboxes
+    id: tasks
+    attributes:
+      label: ✅ 작업 내용
+      description: 필요한 작업을 체크리스트로 관리하세요.
+      options:
+        - label: Task 1
+        - label: Task 2
+        - label: Task 3
