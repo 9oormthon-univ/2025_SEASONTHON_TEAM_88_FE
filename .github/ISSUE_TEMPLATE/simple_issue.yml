@@ -16,13 +16,3 @@ body:
       label: 📄 상세 설명
       description: 필요한 작업이나 배경 설명을 적어주세요.
       placeholder: 'ex) 버튼 색상을 Figma 디자인에 맞춰 변경'
-
-  - type: checkboxes
-    id: tasks
-    attributes:
-      label: ✅ 작업 내용
-      description: 필요한 작업을 체크리스트로 관리하세요.
-      options:
-        - label: Task 1
-        - label: Task 2
-        - label: Task 3
