@@ -1,4 +1,4 @@
-import splashLogo from "../../assets/icons/splash-logo.png";
+import splashLogo from "../../assets/icons/main.svg";
 
 export default function Splash() {
   return (
