@@ -1,4 +1,14 @@
 /* font.css */
+/* Neurimbo Gothic (SlowGothic) */
+@font-face {
+  font-family: 'SlowGothic';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/neurimboGothicRegular.woff2')
+       format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 
 @font-face {
   font-family: 'Pretendard';
@@ -53,4 +63,9 @@
   src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff') format('woff');
   font-weight: 900;
   font-style: normal;
+}
+
+@layer utilities {
+  .font-neurimbo { font-family: 'SlowGothic', sans-serif; }
+  .font-pretendard { font-family: 'Pretendard', system-ui, -apple-system, sans-serif; }
 }
