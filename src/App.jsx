@@ -1,3 +1,4 @@
+// src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -8,8 +9,8 @@ import AroundPage from './pages/AroundPage';
 import WishlistPage from './pages/WishlistPage';
 import MyPage from './pages/MyPage';
 
-// 👇 인트로 - Splash
 import Splash from './pages/intro/Splash';
+import Login from './pages/intro/Login';
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           {/* 인트로 */}
           <Route path="/" element={<Splash />} />
+          <Route path="/login" element={<Login />} />
 
           {/* 메인 라우팅 */}
           <Route path="/home" element={<HomePage />} />
@@ -37,4 +39,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;  
