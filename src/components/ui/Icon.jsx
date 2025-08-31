@@ -9,6 +9,7 @@ import { ReactComponent as HeartOutlineIcon } from '../../assets/icons/heart-out
 import { ReactComponent as BellIcon } from '../../assets/icons/bell.svg?react';
 import { ReactComponent as ArrowLeftIcon } from '../../assets/icons/arrow-left.svg?react';
 import { ReactComponent as MainIcon } from '../../assets/icons/main-icon.svg?react';
+import { ReactComponent as ArrowRightIcon } from '../../assets/icons/arrow-right.svg?react';
 /**
  * SVG 아이콘을 일관된 방식으로 보여주기 위한 컴포넌트입니다.
  * 이름을 props로 받아 해당하는 아이콘을 렌더링합니다.
@@ -28,6 +29,7 @@ const Icon = ({ name, size = 1.5, color, className }) => {
     bell: BellIcon,
     'arrow-left': ArrowLeftIcon,
     'main-icon': MainIcon,
+    'arrow-right': ArrowRightIcon,
   };
 
   const IconComponent = iconMap[name];

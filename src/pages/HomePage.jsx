@@ -4,6 +4,7 @@ import Header from '../layout/Header';
 import Icon from '../components/ui/Icon';
 import Input from '../components/ui/Input';
 import { useState } from 'react';
+import Adver1 from '../assets/images/adver1.svg';
 /**
  * 애플리케이션의 메인 페이지 (홈)
  * 로고와 아이콘으로 구성된 헤더를 사용합니다.
@@ -45,8 +46,27 @@ const HomePage = () => {
           placeholder="원하는 상품을 검색해보세요."
           onSearch={() => alert(`검색어: ${searchTerm}`)}
         ></Input>
-        <h1 className="text-2xl font-bold ">메인 </h1>
-        <p>상품 목록, 이벤트 배너 등이 여기에 표시됩니다.</p>
+
+        {/* 배너 이미지와 오버레이 텍스트를 위한 컨테이너 */}
+        <div className="relative mt-4">
+          {/* 배경 이미지 */}
+          <img src={Adver1} alt="첫 구매 고객 혜택 배너" className="w-full" />
+
+          {/* '추천 상품 보기' 버튼 (좌측 하단) */}
+          <button
+            className="absolute inline-flex items-center h-5 px-3 text-xs rounded-full text-white/40 bg-black/40 bottom-4 left-4"
+            aria-label="추천 상품 보기"
+          >
+            추천 상품 보기 <Icon name="arrow-right" size={0.41669} />
+          </button>
+
+          {/* 페이지 표시 (우측 하단) */}
+          <div className="absolute bottom-4 right-4">
+            <div className="inline-flex items-center justify-center h-5 px-2 text-xs rounded-full text-white/40 bg-black/40 ">
+              1 | 10
+            </div>
+          </div>
+        </div>
       </div>
     </MainLayout>
   );
