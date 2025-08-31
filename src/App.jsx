@@ -11,19 +11,25 @@ import MyPage from './pages/MyPage';
 
 import Splash from './pages/intro/Splash';
 import Login from './pages/intro/Login';
-import Signup from './pages/intro/Signup';   // 👈 추가
+import LoginPhone from './pages/intro/LoginPhone';
+import SignupEmail from './pages/intro/SignupEmail';
 
 const queryClient = new QueryClient();
 
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           {/* 인트로 */}
           <Route path="/" element={<Splash />} />
+
+          {/* 로그인 */}
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} /> {/* 👈 추가 */}
+          <Route path="/login/phone" element={<LoginPhone />} />
+
+          {/* 회원가입 */}
+          <Route path="/signup/email" element={<SignupEmail />} />
 
           {/* 메인 라우팅 */}
           <Route path="/home" element={<HomePage />} />
@@ -33,12 +39,10 @@ function App() {
           <Route path="/my" element={<MyPage />} />
           <Route path="/test" element={<Test />} />
 
-          {/* 없는 경로는 스플래쉬로 리다이렉트 */}
+          {/* 없는 경로는 스플래쉬로 */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
   );
 }
-
-export default App;
