@@ -11,6 +11,7 @@ import MyPage from './pages/MyPage';
 
 import Splash from './pages/intro/Splash';
 import Login from './pages/intro/Login';
+import Signup from './pages/intro/Signup';   // 👈 추가
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ function App() {
           {/* 인트로 */}
           <Route path="/" element={<Splash />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} /> {/* 👈 추가 */}
 
           {/* 메인 라우팅 */}
           <Route path="/home" element={<HomePage />} />
@@ -39,4 +41,4 @@ function App() {
   );
 }
 
-export default App;  
+export default App;
