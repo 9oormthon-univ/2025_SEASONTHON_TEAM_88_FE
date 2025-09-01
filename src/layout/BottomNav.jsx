@@ -11,7 +11,7 @@ const BottomNav = () => {
   const activeTab = location.pathname;
 
   const navItems = [
-    { path: '/', name: 'home', label: '홈', icon: 'home' },
+    { path: '/home', name: 'home', label: '홈', icon: 'home' },
     { path: '/around', name: 'around', label: '내 주변', icon: 'location' },
     { path: '/party', name: 'party', label: '내 파티', icon: 'party' },
     { path: '/wishlist', name: 'wishlist', label: '찜', icon: 'heart-outline' },
@@ -20,7 +20,7 @@ const BottomNav = () => {
   // Icon.jsx에 'location', 'home', 'party', 'user' 아이콘이 추가되어야 합니다.
 
   return (
-    <nav className="fixed bottom-0 z-50 flex items-center justify-around w-full h-16 max-w-screen-sm -translate-x-1/2 border-t border-gray-800 left-1/2">
+    <nav className="fixed bottom-0 flex items-center justify-around w-full h-16 max-w-screen-sm -translate-x-1/2 border-t border-gray-800 z-100 left-1/2">
       {navItems.map((item) => {
         const isActive = activeTab === item.path;
         return (

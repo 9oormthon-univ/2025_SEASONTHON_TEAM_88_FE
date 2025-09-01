@@ -5,6 +5,13 @@ import Icon from '../components/ui/Icon';
 import Input from '../components/ui/Input';
 import { useState } from 'react';
 import Adver1 from '../assets/images/adver1.svg';
+import ProductCard from '../components/domain/ProductCard';
+import { recommendedProducts } from '../mocks/products';
+import CategoryMenu from '../components/domain/CategoryMenu';
+import RecommendedProducts from '../components/domain/RecommendedProducts';
+import RankedProducts from '../components/domain/RankedProducts';
+import SpecialOfferBanner from '../components/domain/SpecialOfferBanner';
+
 /**
  * 애플리케이션의 메인 페이지 (홈)
  * 로고와 아이콘으로 구성된 헤더를 사용합니다.
@@ -67,6 +74,12 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="bg-gray-100">
+        <CategoryMenu />
+        <RecommendedProducts />
+        <RankedProducts />
+        <SpecialOfferBanner />
       </div>
     </MainLayout>
   );
