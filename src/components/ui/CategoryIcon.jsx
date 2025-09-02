@@ -11,7 +11,6 @@ import { ReactComponent as GiftSetIconSvg } from '../../assets/icons/category/gi
 import { ReactComponent as HealthFoodIconSvg } from '../../assets/icons/category/healthFoodIcon.svg?react';
 import { ReactComponent as RiceCakeIconSvg } from '../../assets/icons/category/riceCakeIcon.svg?react';
 import { ReactComponent as TraditionalSnackIconSvg } from '../../assets/icons/category/traditionalSnackIcon.svg?react';
-// '소품' 카테고리 아이콘도 필요하다면 여기에 추가합니다.
 // import { ReactComponent as DollIconSvg } from '../../assets/icons/category/dollIcon.svg?react';
 // import { ReactComponent as DiffuserIconSvg } from '../../assets/icons/category/diffuserIcon.svg?react';
 
@@ -22,7 +21,6 @@ import { ReactComponent as TraditionalSnackIconSvg } from '../../assets/icons/ca
  * @param {string} [props.className] - 추가적인 스타일링을 위한 Tailwind CSS 클래스
  */
 const CategoryIcon = ({ name, className }) => {
-  // 아이콘 이름과 실제 SVG 컴포넌트를 매핑하는 객체
   const iconMap = {
     bakeryIcon: BakeryIconSvg,
     cakeIcon: CakeIconSvg,
@@ -46,7 +44,7 @@ const CategoryIcon = ({ name, className }) => {
   }
 
   return (
-    <div className={`w-12 h-12 mb-1 bg-purple-50 rounded-2xl flex items-center justify-center ${className}`}>
+    <div className={`w-13 h-13 mb-1 bg-purple-50 rounded-2xl flex items-center justify-center ${className}`}>
       <IconComponent className="w-8 h-8" />
     </div>
   );

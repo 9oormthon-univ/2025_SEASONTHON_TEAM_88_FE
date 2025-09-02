@@ -35,7 +35,7 @@ const Input = ({
           placeholder={placeholder}
           disabled={disabled}
           // 검색창 스타일: 흰 배경, 검은 글씨, 둥근 모서리, 내부 패딩
-          className="w-full py-2 pl-5 pr-12 text-black bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full py-2 pl-5 pr-12 font-sans text-sm leading-normal text-black bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
         <button onClick={onSearch} className="absolute inset-y-0 right-0 flex items-center pr-4" aria-label="검색">
           <Icon name="search" size={1.25} className="text-black" />

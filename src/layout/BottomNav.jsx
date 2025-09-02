@@ -2,10 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Icon from '../components/ui/Icon';
 
-/**
- * 화면 하단에 위치하는 고정 네비게이션 바 컴포넌트입니다.
- * 5개의 주 메뉴를 포함하며, 현재 경로에 따라 활성화 상태를 표시합니다.
- */
 const BottomNav = () => {
   const location = useLocation();
   const activeTab = location.pathname;
@@ -20,7 +16,10 @@ const BottomNav = () => {
   // Icon.jsx에 'location', 'home', 'party', 'user' 아이콘이 추가되어야 합니다.
 
   return (
-    <nav className="fixed bottom-0 flex items-center justify-around w-full h-16 max-w-screen-sm -translate-x-1/2 border-t border-gray-800 z-100 left-1/2">
+    <nav
+      style={{ boxShadow: '0 -3px 6px 0 rgba(0,0,0,0.05)' }}
+      className="fixed bottom-0 flex items-center justify-around w-full h-16 max-w-screen-sm -translate-x-1/2 bg-white left-1/2"
+    >
       {navItems.map((item) => {
         const isActive = activeTab === item.path;
         return (
