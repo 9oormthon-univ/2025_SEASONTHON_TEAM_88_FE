@@ -9,6 +9,9 @@ import { ReactComponent as HeartOutlineIcon } from '../../assets/icons/heart-out
 import { ReactComponent as BellIcon } from '../../assets/icons/bell.svg?react';
 import { ReactComponent as ArrowLeftIcon } from '../../assets/icons/arrow-left.svg?react';
 import { ReactComponent as MainIcon } from '../../assets/icons/main-icon.svg?react';
+import { ReactComponent as ArrowRightIcon } from '../../assets/icons/arrow-right.svg?react';
+import { ReactComponent as HeartOutLineIconWhite } from '../../assets/icons/heart-outline-white.svg?react';
+import { ReactComponent as RankBgIcon } from '../../assets/icons/rankbg.svg?react';
 /**
  * SVG 아이콘을 일관된 방식으로 보여주기 위한 컴포넌트입니다.
  * 이름을 props로 받아 해당하는 아이콘을 렌더링합니다.
@@ -19,7 +22,6 @@ import { ReactComponent as MainIcon } from '../../assets/icons/main-icon.svg?rea
  * @param {string} [props.className] - 추가적인 Tailwind CSS 클래스를 적용할 때 사용합니다.
  */
 const Icon = ({ name, size = 1.5, color, className }) => {
-  // 아이콘 이름에 따라 해당하는 SVG 컴포넌트를 매핑합니다.
   const iconMap = {
     search: SearchIcon,
     cart: CartIcon,
@@ -28,19 +30,21 @@ const Icon = ({ name, size = 1.5, color, className }) => {
     bell: BellIcon,
     'arrow-left': ArrowLeftIcon,
     'main-icon': MainIcon,
+    'arrow-right': ArrowRightIcon,
+    'heart-outline-white': HeartOutLineIconWhite,
+    rankbg: RankBgIcon,
   };
 
   const IconComponent = iconMap[name];
 
-  // 해당하는 아이콘이 없으면 아무것도 렌더링하지 않습니다.
   if (!IconComponent) {
     console.warn(`Icon not found: ${name}`);
     return null;
   }
+  // 하트 svg 크기 달라서 조정
+  const style = name.startsWith('heart-filled') ? { transform: 'scale(1.3)' } : {};
 
-  // fill='currentColor' 속성을 주어 부모의 text color를 상속받게 합니다.
-  // width와 height에 템플릿 리터럴을 사용해 'rem' 단위를 붙여줍니다.
-  return <IconComponent width={`${size}rem`} height={`${size}rem`} className={`${color} ${className}`} />;
+  return <IconComponent width={`${size}rem`} height={`${size}rem`} style={style} className={`${color} ${className}`} />;
 };
 
 export default Icon;

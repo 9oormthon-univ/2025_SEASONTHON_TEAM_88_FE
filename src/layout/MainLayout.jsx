@@ -12,11 +12,10 @@ import BottomNav from './BottomNav';
 const MainLayout = ({ children, header, showBottomNav = true }) => {
   return (
     // 기본 배경색을 검은색으로 설정합니다.
-    <div className="relative w-full max-w-screen-sm min-h-screen mx-auto">
+    <div className="relative w-full max-w-screen-sm min-h-screen mx-auto scrollbar-hide">
       {/* 페이지로부터 전달받은 헤더를 렌더링합니다. */}
       {header}
 
-      {/* 헤더의 높이(h-14)만큼 상단 패딩을 주어 컨텐츠가 가려지지 않게 합니다. */}
       <main className={`pt-14 ${showBottomNav ? 'pb-16' : ''}`}>{children}</main>
 
       {showBottomNav && <BottomNav />}

@@ -4,24 +4,26 @@ import Header from '../layout/Header';
 import Icon from '../components/ui/Icon';
 import Input from '../components/ui/Input';
 import { useState } from 'react';
-/**
- * 애플리케이션의 메인 페이지 (홈)
- * 로고와 아이콘으로 구성된 헤더를 사용합니다.
- */
+import Adver1 from '../assets/images/adver1.svg';
+import ProductCard from '../components/domain/ProductCard';
+import { recommendedProducts } from '../mocks/products';
+import CategoryMenu from '../components/domain/CategoryMenu';
+import RecommendedProducts from '../components/domain/RecommendedProducts';
+import RankedProducts from '../components/domain/RankedProducts';
+import SpecialOfferBanner from '../components/domain/SpecialOfferBanner';
+
 const HomePage = () => {
-  // 홈 페이지에서 사용할 헤더를 정의합니다.
+  const currentPage = 1;
+  const totalPage = 10;
   const [searchTerm, setSearchTerm] = useState('');
   const homeHeader = (
     <Header
       className="text-white bg-black" // 다크 모드 스타일
-      // 왼쪽 영역: 로고 또는 아이콘을 표시합니다.
-      // MainIcon 대신 텍스트 로고를 사용했습니다. SVG 컴포넌트로 교체할 수 있습니다.
       left={
         <div className="text-2xl font-bold text-purple-500">
           <Icon name="main-icon" size={6.5625} />
         </div>
       }
-      // 오른쪽 영역: 알림 및 장바구니 아이콘을 표시합니다.
       right={
         <div className="flex items-center space-x-4">
           <button aria-label="알림">
@@ -45,8 +47,34 @@ const HomePage = () => {
           placeholder="원하는 상품을 검색해보세요."
           onSearch={() => alert(`검색어: ${searchTerm}`)}
         ></Input>
-        <h1 className="text-2xl font-bold ">메인 </h1>
-        <p>상품 목록, 이벤트 배너 등이 여기에 표시됩니다.</p>
+
+        {/* 배너 이미지와 오버레이 텍스트를 위한 컨테이너 */}
+        <div className="relative mt-4">
+          {/* 배경 이미지 */}
+          <img src={Adver1} alt="첫 구매 고객 혜택 배너" className="w-full" />
+
+          {/* '추천 상품 보기' 버튼 (좌측 하단) */}
+          <button
+            className="absolute inline-flex items-center h-5 px-3 mr-1 font-sans rounded-full text-[0.625rem] text-white/40 bg-black/40 bottom-3 left-6"
+            aria-label="추천 상품 보기"
+          >
+            추천 상품 보기 <Icon name="arrow-right" color="text-white/40" size={0.5} />
+          </button>
+
+          {/* 페이지 표시 (우측 하단) */}
+          <div className="absolute bottom-3 right-4">
+            <div className="inline-flex items-center justify-center h-5 px-2 text-[0.625rem] rounded-full bg-black/40">
+              <span className={currentPage === 1 ? 'text-white' : 'text-white/40'}> {currentPage} </span>
+              <span className="ml-1 text-white/40"> | {totalPage}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-gray-100">
+        <CategoryMenu />
+        <RecommendedProducts />
+        <RankedProducts />
+        <SpecialOfferBanner />
       </div>
     </MainLayout>
   );
