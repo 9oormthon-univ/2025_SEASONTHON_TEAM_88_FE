@@ -1,16 +1,17 @@
-// src/components/ui/Button.jsx
 import React from 'react';
 
 /**
  * 공용 버튼 컴포넌트
- * - variant: 'primary' | 'icon' | 'cta'
- * - isActive: 활성/비활성 제어(특히 'primary'와 'cta'에서 색 전환)
+ * - variant: 'primary' | 'icon' | 'cta' | 'step'
+ * - isActive: 활성/비활성 제어
+ * - isFinal: 'step'일 때 마지막 단계(완료) 여부
  */
 const Button = ({
   children,
   onClick,
   variant = 'primary',
   isActive = true,
+  isFinal = false,
   disabled = false,
   className = '',
   ...rest
@@ -21,10 +22,7 @@ const Button = ({
 
   switch (variant) {
     /** =========================
-     *  Figma CTA (다음 버튼 등)
-     *  - w: 20.5rem / py: 0.4375rem / radius: 0.5rem
-     *  - 활성: #8371FD, 비활성: #81878B
-     *  - 폰트: Pretendard 1rem 600 / 140%
+     *  Figma CTA (예: 회원가입 완료 버튼)
      * ========================= */
     case 'cta': {
       combinedClasses +=
@@ -33,6 +31,22 @@ const Button = ({
       combinedClasses += isActive
         ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
         : ' bg-[#81878B] text-white cursor-not-allowed';
+      break;
+    }
+
+    /** =========================
+     *  Step 버튼 (다음 / 완료)
+     * ========================= */
+    case 'step': {
+      combinedClasses +=
+        ' w-full h-12 rounded-xl text-[15px] font-semibold ';
+      if (isFinal) {
+        combinedClasses += ' bg-[#8371FD] text-white hover:bg-[#6f60f0]';
+      } else {
+        combinedClasses += isActive
+          ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
+          : ' bg-gray-300 text-white cursor-not-allowed';
+      }
       break;
     }
 
@@ -60,7 +74,7 @@ const Button = ({
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled || (!isActive && variant === 'cta')}
+      disabled={disabled || (!isActive && (variant === 'cta' || variant === 'step'))}
       className={combinedClasses}
       {...rest}
     >

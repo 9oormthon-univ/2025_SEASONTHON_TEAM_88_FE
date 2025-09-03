@@ -37,16 +37,16 @@ export default function StartPartyPurpose() {
       case 0: return !!purpose;
       case 1: return !!budget;
       case 2: return !!who;
-      case 3: return items.length > 0;           // 최소 1개 선택
+      case 3: return items.length > 0;           
       case 4: return specialMode === "없음" || (specialMode === "직접입력" && specialText.trim().length > 0);
-      case 5: return true; // 완료 화면
+      case 5: return true; 
       default: return false;
     }
   }, [step, purpose, budget, who, items, specialMode, specialText]);
 
-  // 진행률: 현재 단계의 완료 여부를 반영해 (완료된 단계 수 / 6)*100
+
   const percent = useMemo(() => {
-    const finished = Math.min(step, TOTAL_STEPS - 1); // 0~5
+    const finished = Math.min(step, TOTAL_STEPS - 1); 
     const completedSteps = finished + (stepDone ? 1 : 0);
     return Math.round((completedSteps / TOTAL_STEPS) * 100);
   }, [step, stepDone]);
@@ -57,7 +57,7 @@ export default function StartPartyPurpose() {
   };
 
   const goClose = () => {
-    // 닫기: 현재는 뒤로. 필요시 확인 모달 후 이동 처리
+
     nav(-1);
   };
 
@@ -65,8 +65,6 @@ export default function StartPartyPurpose() {
     if (!stepDone) return;
     if (step < TOTAL_STEPS - 1) setStep((s) => s + 1);
     else {
-      // 최종 완료: 필요 시 서버 전송/전역 저장 후 이동
-      // 예) nav("/party"); 또는 요약 화면 등
       nav("/party");
     }
   };

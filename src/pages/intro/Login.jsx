@@ -48,25 +48,6 @@ export default function Login() {
           <img src={kakaoIcon} alt="카카오" className="w-5 h-5" />
           카카오로 로그인
         </button>
-
-        {/* 네이버 */}
-        <button
-          type="button"
-          className="w-full h-12 rounded-full bg-[#03C75A] text-white font-medium flex items-center justify-center gap-2"
-          aria-label="네이버로 로그인"
-        >
-          <img src={naverIcon} alt="네이버" className="w-5 h-5" />
-          네이버로 로그인
-        </button>
-
-        {/* 휴대폰 번호 */}
-        <button
-          type="button"
-          className="w-full h-12 rounded-full border border-gray-300 bg-white text-black font-medium flex items-center justify-center gap-2"
-          aria-label="휴대폰번호로 로그인"
-        >
-          휴대폰번호로 로그인
-        </button>
       </section>
 
       {/* 이메일 회원가입 링크 */}
