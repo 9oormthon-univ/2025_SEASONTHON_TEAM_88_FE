@@ -21,7 +21,7 @@ const HomePage = () => {
       className="text-white bg-black" // 다크 모드 스타일
       left={
         <div className="text-2xl font-bold text-purple-500">
-          <Icon name="main-icon" size={6.5625} />
+          <Icon name="main-icon" size={6.5625} className="h-[1.875rem]" />
         </div>
       }
       right={
@@ -39,7 +39,7 @@ const HomePage = () => {
 
   return (
     <MainLayout header={homeHeader} showBottomNav={true}>
-      <div className="p-4 text-white bg-black">
+      <div className="pb-4 pl-4 pr-4 text-white bg-black ">
         <Input
           variant="search"
           value={searchTerm}
@@ -55,10 +55,11 @@ const HomePage = () => {
 
           {/* '추천 상품 보기' 버튼 (좌측 하단) */}
           <button
-            className="absolute inline-flex items-center h-5 px-3 mr-1 font-sans rounded-full text-[0.625rem] text-white/40 bg-black/40 bottom-3 left-6"
+            className="absolute inline-flex items-center justify-center gap-1 px-3 py-1 mr-1 font-pretendard rounded-full text-[0.625rem] text-white/40 bg-black/40 bottom-3 left-6"
             aria-label="추천 상품 보기"
           >
-            추천 상품 보기 <Icon name="arrow-right" color="text-white/40" size={0.5} />
+            <span>추천 상품 보기</span>
+            <Icon name="arrow-right" className="translate-y-[0.5px]" color="text-white/40" size={0.6} />
           </button>
 
           {/* 페이지 표시 (우측 하단) */}

@@ -12,6 +12,13 @@ import { ReactComponent as MainIcon } from '../../assets/icons/main-icon.svg?rea
 import { ReactComponent as ArrowRightIcon } from '../../assets/icons/arrow-right.svg?react';
 import { ReactComponent as HeartOutLineIconWhite } from '../../assets/icons/heart-outline-white.svg?react';
 import { ReactComponent as RankBgIcon } from '../../assets/icons/rankbg.svg?react';
+import { ReactComponent as HomeIcon } from '../../assets/icons/home.svg?react';
+import { ReactComponent as DropdownIcon } from '../../assets/icons/dropdown.svg?react';
+import { ReactComponent as MyIcon } from '../../assets/icons/my.svg?react';
+import { ReactComponent as PartyNavIcon } from '../../assets/icons/partynav.svg?react';
+import { ReactComponent as LikeIcon } from '../../assets/icons/like.svg?react';
+import { ReactComponent as AroundIcon } from '../../assets/icons/around.svg?react';
+import { ReactComponent as HomeNavIcon } from '../../assets/icons/home-nav.svg?react';
 /**
  * SVG 아이콘을 일관된 방식으로 보여주기 위한 컴포넌트입니다.
  * 이름을 props로 받아 해당하는 아이콘을 렌더링합니다.
@@ -33,6 +40,13 @@ const Icon = ({ name, size = 1.5, color, className }) => {
     'arrow-right': ArrowRightIcon,
     'heart-outline-white': HeartOutLineIconWhite,
     rankbg: RankBgIcon,
+    home: HomeIcon,
+    dropdown: DropdownIcon,
+    my: MyIcon,
+    'party-nav': PartyNavIcon,
+    like: LikeIcon,
+    around: AroundIcon,
+    'home-nav': HomeNavIcon,
   };
 
   const IconComponent = iconMap[name];

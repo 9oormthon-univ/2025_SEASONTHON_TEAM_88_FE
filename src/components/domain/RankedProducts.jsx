@@ -14,7 +14,7 @@ const RankedItem = ({ rank, product }) => {
   };
 
   return (
-    <div className="flex items-start space-x-3 w-70">
+    <div className="flex items-start space-x-3 w-[17.5rem]">
       {/* 이미지와 순위 오버레이를 위한 컨테이너 */}
       <div className="relative flex-shrink-0">
         <img
@@ -49,16 +49,22 @@ const RankedItem = ({ rank, product }) => {
       </div>
       {/* 상품 정보 */}
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-gray-500 truncate">{product.brand}</p>
-        <p className="text-sm text-gray-800 break-keep line-clamp-1">{product.name}</p>
-        <p className="mt-0.5 text-base font-bold">{product.price.toLocaleString()}원</p>
+        <p className="text-[0.75rem] leading-[1.2rem] font-medium text-gray-500 font-pretendard break-keep">
+          {product.brand}
+        </p>
+        <p className="text-[0.875rem] leading-[1.4rem] font-normal text-gray-900  break-keep font-pretendard line-clamp-1 ">
+          {product.name}
+        </p>
+        <p className="mt-1 text-[1rem] leading-[1.4rem] font-semibold text-gray-900 font-pretendard">
+          {product.price.toLocaleString()}원
+        </p>
       </div>
     </div>
   );
 };
 
 const RankedProducts = () => {
-  const FILTERS = ['1만원대', '2만원대', '3만원대', '4만원대', '5만원대'];
+  const FILTERS = ['1만원대', '2만원대', '3만원대', '4만원대', '5만원대', '6만원대', '7만원대', '8만원대', '9만원대'];
   const [selectedFilter, setSelectedFilter] = useState(FILTERS[0]);
 
   // 선택된 필터에 따라 상품 목록을 필터링하고 정렬합니다.
@@ -74,17 +80,17 @@ const RankedProducts = () => {
 
   return (
     <section className="p-4 bg-white">
-      <h2 className="mb-3 text-lg font-bold">가격대별 인기 상품 순위</h2>
+      <h2 className="mb-3 text-lg font-semibold font-pretendard">가격대별 인기 상품 순위</h2>
       {/* 가격 필터 버튼 */}
-      <div className="flex pb-2 mb-4 space-x-2 overflow-x-auto scrollbar-hide">
+      <div className="flex pb-2 mb-3 space-x-2 overflow-x-auto scrollbar-hide">
         {FILTERS.map((filter) => (
           <button
             key={filter}
             onClick={() => setSelectedFilter(filter)}
-            className={`px-4 py-1.5 text-sm rounded-full whitespace-nowrap border transition-colors duration-200 ${
+            className={`px-4 py-1.5 text-[0.875rem] rounded-full font-pretendard font-medium whitespace-nowrap border transition-colors duration-200 ${
               selectedFilter === filter
                 ? 'border-gray-700 bg-gray-700 text-white '
-                : 'border-gray-400 bg-white text-gray-500 hover:bg-gray-100'
+                : 'border-gray-400 bg-white text-gray-500'
             }`}
           >
             {filter}
@@ -92,7 +98,7 @@ const RankedProducts = () => {
         ))}
       </div>
       {/* 상품 순위 (2열 그리드) */}
-      <div className="grid grid-flow-col grid-rows-3 overflow-x-auto gap-x-4 gap-y-6 scrollbar-hide">
+      <div className="grid grid-flow-col grid-rows-3 overflow-x-auto gap-x-4 font-pretendard gap-y-6 scrollbar-hide">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => <RankedItem key={product.id} rank={index + 1} product={product} />)
         ) : (

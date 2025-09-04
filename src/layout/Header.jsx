@@ -9,10 +9,10 @@ import React from 'react';
  * @param {React.ReactNode} [props.right] - 헤더의 오른쪽에 표시될 요소입니다. (예: 아이콘 그룹)
  * @param {string} [props.className] - 추가적인 스타일링을 위한 클래스입니다. (예: 'bg-black text-white')
  */
-const Header = ({ left, center, right, className = 'text-black bg-white border-b' }) => {
+const Header = ({ left, center, right, className = 'text-black bg-white' }) => {
   return (
     <header
-      className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-screen-sm h-14 flex items-center justify-between px-4 z-50 ${className}`}
+      className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-screen-sm pt-[0.6rem] pr-[1rem] pl-[1rem] pb-[0.88rem] flex items-center justify-between px-4 z-50 ${className}`}
     >
       {/* 왼쪽 영역: 최소 너비를 지정하여 중앙 정렬에 영향을 주도록 함 */}
       <div className="min-w-[4rem] flex justify-start">{left}</div>

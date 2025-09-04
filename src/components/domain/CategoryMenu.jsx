@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import CategoryIcon from '../ui/CategoryIcon';
 import { CATEGORIES } from '../../mocks/products';
+import { Link } from 'react-router-dom';
+
 const TABS = ['식품', '소품', '주얼리', '문구'];
 
 const CategoryMenu = () => {
@@ -16,14 +18,14 @@ const CategoryMenu = () => {
   };
 
   return (
-    <section className="p-4 bg-white">
+    <section className="pt-0 pb-4 pl-4 pr-4 bg-white">
       {/* 탭 네비게이션 */}
-      <nav className="flex items-center justify-between w-full border-b font-sans border-[#81878B]">
+      <nav className="flex items-center justify-between w-full border-b font-pretendard border-[#81878B]">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabClick(tab)}
-            className={`px-4 py-2 text-lg transition-colors duration-200 ${
+            className={`font-semibold flex justify-center items-center pt-[0.6885rem] pr-[1.0625rem] pb-[0.625rem] pl-[1.125rem] text-[1.125rem] leading-[1.575rem] transition-colors duration-200 ${
               activeTab === tab ? 'font-bold border-b-2 border-black text-black' : 'text-gray-400'
             }`}
           >
@@ -45,10 +47,14 @@ const CategoryMenu = () => {
             className="absolute grid w-full grid-cols-5 gap-x-2 gap-y-4"
           >
             {CATEGORIES[activeTab]?.map((category) => (
-              <div key={category.name} className="flex flex-col items-center text-center">
+              <Link
+                key={category.name}
+                to={`/products/${activeTab}/${category.name}`}
+                className="flex flex-col items-center text-center"
+              >
                 <CategoryIcon name={category.icon} />
-                <p className="font-sans text-xs text-gray-700">{category.name}</p>
-              </div>
+                <p className="text-xs text-gray-700 font-pretendard">{category.name}</p>
+              </Link>
             ))}
           </motion.div>
         </AnimatePresence>
