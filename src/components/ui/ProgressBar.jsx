@@ -1,4 +1,3 @@
-// src/components/ui/ProgressBar.jsx
 import React from "react";
 
 export default function ProgressBar({ value = 0, className = "" }) {
