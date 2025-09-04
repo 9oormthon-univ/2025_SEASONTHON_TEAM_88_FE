@@ -165,7 +165,7 @@ const ProductListPage = () => {
         <img src={Adver2} alt="케이크 레터링 광고" className="w-full" />
         <div className="absolute flex items-center justify-between w-full px-4 bottom-3">
           <button
-            className="inline-flex items-center h-5 px-3 font-sans rounded-full text-[0.625rem] text-white/40 bg-black/40"
+            className="inline-flex items-center h-5 px-3 font-pretendard rounded-full text-[0.625rem] text-white/40 bg-black/40"
             aria-label="추천 상품 보기"
           >
             추천 상품 보기 <Icon name="arrow-right" color="text-white/40" size={0.5} />
@@ -176,7 +176,6 @@ const ProductListPage = () => {
           </div>
         </div>
       </div>
-      {/* ✨ 정렬 및 필터 버튼 영역 추가 */}
       <div className="flex items-center justify-between p-4">
         <button onClick={() => setIsSortOpen(true)} className="flex items-center space-x-1">
           <Icon name="sort" size={1.2} />

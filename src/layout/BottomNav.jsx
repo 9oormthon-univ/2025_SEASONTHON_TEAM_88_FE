@@ -7,13 +7,12 @@ const BottomNav = () => {
   const activeTab = location.pathname;
 
   const navItems = [
-    { path: '/home', name: 'home', label: '홈', icon: 'home' },
-    { path: '/around', name: 'around', label: '내 주변', icon: 'location' },
-    { path: '/party', name: 'party', label: '내 파티', icon: 'party' },
-    { path: '/wishlist', name: 'wishlist', label: '찜', icon: 'heart-outline' },
-    { path: '/my', name: 'my', label: '마이', icon: 'user' },
+    { path: '/home', name: 'home', label: '홈', icon: 'home-nav' },
+    { path: '/around', name: 'around', label: '내 주변', icon: 'around' },
+    { path: '/party', name: 'party', label: '내 파티', icon: 'party-nav' },
+    { path: '/wishlist', name: 'wishlist', label: '찜', icon: 'like' },
+    { path: '/my', name: 'my', label: '마이', icon: 'my' },
   ];
-  // Icon.jsx에 'location', 'home', 'party', 'user' 아이콘이 추가되어야 합니다.
 
   return (
     <nav
@@ -28,8 +27,19 @@ const BottomNav = () => {
             key={item.name}
             className="flex flex-col items-center justify-center space-y-1 text-center"
           >
-            <Icon name={item.icon} size={1.5} className={isActive ? 'text-purple-500' : 'text-gray-400'} />
-            <span className={`text-xs ${isActive ? 'text-purple-500 font-bold' : 'text-gray-400'}`}>{item.label}</span>
+            <Icon
+              name={item.icon}
+              size={1.5}
+              style={{ stroke: 'currentColor', fill: 'currentColor' }}
+              className={isActive ? 'text-[#8371FD]' : 'text-gray-600'}
+            />
+            <span
+              className={`text-[0.75rem] font-pretendard ${
+                isActive ? 'text-[#8371FD] font-semibold' : 'text-gray-600'
+              }`}
+            >
+              {item.label}
+            </span>
           </Link>
         );
       })}

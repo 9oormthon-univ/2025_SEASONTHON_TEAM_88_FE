@@ -55,10 +55,11 @@ const HomePage = () => {
 
           {/* '추천 상품 보기' 버튼 (좌측 하단) */}
           <button
-            className="absolute inline-flex items-center h-5 px-3 mr-1 font-pretendard rounded-full text-[0.625rem] text-white/40 bg-black/40 bottom-3 left-6"
+            className="absolute inline-flex items-center justify-center gap-1 px-3 py-1 mr-1 font-pretendard rounded-full text-[0.625rem] text-white/40 bg-black/40 bottom-3 left-6"
             aria-label="추천 상품 보기"
           >
-            추천 상품 보기 <Icon name="arrow-right" color="text-white/40" size={0.6} />
+            <span>추천 상품 보기</span>
+            <Icon name="arrow-right" className="translate-y-[0.5px]" color="text-white/40" size={0.6} />
           </button>
 
           {/* 페이지 표시 (우측 하단) */}
