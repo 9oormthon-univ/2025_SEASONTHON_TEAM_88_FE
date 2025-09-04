@@ -10,12 +10,12 @@ import SignupSuccess from './pages/intro/SignupSuccess.jsx';
 import HomePage from './pages/HomePage';
 import AroundPage from './pages/AroundPage';
 import PartyPage from './pages/PartyPage';
+import PartyStart from './pages/Party/PartyStart';
 import WishlistPage from './pages/WishlistPage';
 import MyPage from './pages/MyPage';
 import Test from './pages/Test';
 
-// 파티 시작 화면이 존재한다면 주석 해제
-import PartyStart from './pages/Party/PartyStart';
+
 
 const queryClient = new QueryClient();
 

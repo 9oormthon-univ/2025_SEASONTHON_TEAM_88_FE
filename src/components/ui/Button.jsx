@@ -34,21 +34,24 @@ const Button = ({
       break;
     }
 
+    //다음 버튼
     /** =========================
-     *  Step 버튼 (다음 / 완료)
-     * ========================= */
-    case 'step': {
-      combinedClasses +=
-        ' w-full h-12 rounded-xl text-[15px] font-semibold ';
-      if (isFinal) {
-        combinedClasses += ' bg-[#8371FD] text-white hover:bg-[#6f60f0]';
-      } else {
-        combinedClasses += isActive
-          ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
-          : ' bg-gray-300 text-white cursor-not-allowed';
-      }
-      break;
-    }
+ *  Step 버튼 (다음 / 완료)
+ *  Figma 스펙 적용
+ * ========================= */
+case 'step': {
+  combinedClasses +=
+    ' flex w-[20.5rem] py-[0.4375rem] justify-center items-center ' +
+    ' rounded-[0.5rem] font-pretendard text-[1rem] font-semibold leading-[1.4rem] ';
+  if (isFinal) {
+    combinedClasses += ' bg-[#8371FD] text-white hover:bg-[#6f60f0]';
+  } else {
+    combinedClasses += isActive
+      ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
+      : ' bg-[#81878B] text-white cursor-not-allowed';
+  }
+  break;
+}
 
     // 'icon' (예: 우측 아이콘 있는 빠른 액션)
     case 'icon': {
