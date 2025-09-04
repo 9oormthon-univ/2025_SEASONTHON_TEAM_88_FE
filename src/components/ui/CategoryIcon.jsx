@@ -44,8 +44,8 @@ const CategoryIcon = ({ name, className }) => {
   }
 
   return (
-    <div className={`w-13 h-13 mb-1 bg-purple-50 rounded-2xl flex items-center justify-center ${className}`}>
-      <IconComponent className="w-8 h-8" />
+    <div className={`w-13 h-13 mb-1 rounded-2xl flex items-center justify-center ${className}`}>
+      <IconComponent className="w-13 h-13" />
     </div>
   );
 };

@@ -74,7 +74,7 @@ const RankedProducts = () => {
 
   return (
     <section className="p-4 bg-white">
-      <h2 className="mb-3 text-lg font-bold">가격대별 인기 상품 순위</h2>
+      <h2 className="mb-3 text-lg font-semibold font-pretendard">가격대별 인기 상품 순위</h2>
       {/* 가격 필터 버튼 */}
       <div className="flex pb-2 mb-4 space-x-2 overflow-x-auto scrollbar-hide">
         {FILTERS.map((filter) => (
@@ -92,7 +92,7 @@ const RankedProducts = () => {
         ))}
       </div>
       {/* 상품 순위 (2열 그리드) */}
-      <div className="grid grid-flow-col grid-rows-3 overflow-x-auto gap-x-4 gap-y-6 scrollbar-hide">
+      <div className="grid grid-flow-col grid-rows-3 overflow-x-auto gap-x-4 font-pretendard gap-y-6 scrollbar-hide">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product, index) => <RankedItem key={product.id} rank={index + 1} product={product} />)
         ) : (

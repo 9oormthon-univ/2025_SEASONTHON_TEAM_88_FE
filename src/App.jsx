@@ -12,7 +12,9 @@ import MyPage from './pages/MyPage';
 import Splash from './pages/intro/Splash';
 import Login from './pages/intro/Login';
 import Signup from './pages/intro/Signup';
-
+import ProductListPage from './pages/products/ProductListPage';
+import ProductDetailPage from './pages/products/ProductDetailPage';
+import FilterPage from './pages/FilterPage';
 const queryClient = new QueryClient();
 
 function App() {
@@ -31,6 +33,9 @@ function App() {
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/my" element={<MyPage />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/products/:parentCategory/:subCategory" element={<ProductListPage />} />
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
+          <Route path="/filter" element={<FilterPage />} />
           {/* 없는 경로는 스플래쉬로 리다이렉트 */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

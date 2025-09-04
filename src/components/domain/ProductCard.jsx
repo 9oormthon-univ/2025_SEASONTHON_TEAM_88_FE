@@ -35,9 +35,9 @@ const ProductCard = ({ imageUrl, brand, name, price, initialLiked = false, tags,
       </div>
 
       <div className="pt-1">
-        <p className="font-sans text-xs font-medium text-gray-500 break-keep">{brand}</p>
-        <h3 className="mt-0.5 text-sm font-normal text-gray-800  break-keep font-sans line-clamp-2 ">{name}</h3>
-        <p className="mt-1 font-sans text-base font-semibold text-gray-900">{price.toLocaleString()}원</p>
+        <p className="text-xs font-medium text-gray-500 font-pretendard break-keep">{brand}</p>
+        <h3 className="mt-0.5 text-sm font-normal text-gray-800  break-keep font-pretendard line-clamp-2 ">{name}</h3>
+        <p className="mt-1 text-base font-semibold text-gray-900 font-pretendard">{price.toLocaleString()}원</p>
 
         {/* 태그 (선택적 렌더링) */}
         {/* {tags && tags.length > 0 && (
