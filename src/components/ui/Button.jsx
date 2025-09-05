@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * 공용 버튼 컴포넌트
  * - variant: 'primary' | 'icon' | 'cta' | 'step'
- * - isActive: 활성/비활성 제어
+ * - isActive: 활성/비활성 제어 (cta/step은 isActive=false면 disabled와 동일 동작)
  * - isFinal: 'step'일 때 마지막 단계(완료) 여부
  */
 const Button = ({
@@ -17,43 +17,42 @@ const Button = ({
   ...rest
 }) => {
   // 공통 베이스
-  let combinedClasses =
-    `transition-colors duration-200 flex items-center justify-center ${className}`;
+  let combinedClasses = `transition-colors duration-200 flex items-center justify-center ${className}`;
 
   switch (variant) {
     /** =========================
-     *  Figma CTA (예: 회원가입 완료 버튼)
+     *  CTA (예: 완료)
+     *  - 피그마 스펙: w-full, h-12, rounded-2xl
      * ========================= */
     case 'cta': {
       combinedClasses +=
-        ' w-[20.5rem] py-[0.4375rem] rounded-[0.5rem] ' +
-        ' font-pretendard text-[1rem] font-semibold leading-[1.4rem] ';
-      combinedClasses += isActive
+        ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
+      combinedClasses += isActive && !disabled
         ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
-        : ' bg-[#81878B] text-white cursor-not-allowed';
+        : ' bg-[#C9CED3] text-white cursor-not-allowed opacity-70';
       break;
     }
 
-    //다음 버튼
     /** =========================
- *  Step 버튼 (다음 / 완료)
- *  Figma 스펙 적용
- * ========================= */
-case 'step': {
-  combinedClasses +=
-    ' flex w-[20.5rem] py-[0.4375rem] justify-center items-center ' +
-    ' rounded-[0.5rem] font-pretendard text-[1rem] font-semibold leading-[1.4rem] ';
-  if (isFinal) {
-    combinedClasses += ' bg-[#8371FD] text-white hover:bg-[#6f60f0]';
-  } else {
-    combinedClasses += isActive
-      ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
-      : ' bg-[#81878B] text-white cursor-not-allowed';
-  }
-  break;
-}
+     *  Step (다음/완료)
+     *  - 피그마 스펙: w-full, h-12, rounded-2xl
+     *  - 비활성: 연회색
+     * ========================= */
+    case 'step': {
+      combinedClasses +=
+        ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
+      if (disabled || !isActive) {
+        combinedClasses += ' bg-[#C9CED3] text-white cursor-not-allowed opacity-70';
+      } else {
+        // isFinal 여부 상관없이 동일 보라색 톤 유지 (호버만)
+        combinedClasses += ' bg-[#8371FD] text-white hover:bg-[#6f60f0]';
+      }
+      break;
+    }
 
-    // 'icon' (예: 우측 아이콘 있는 빠른 액션)
+    /** =========================
+     *  아이콘 버튼 (빠른 액션)
+     * ========================= */
     case 'icon': {
       combinedClasses += ' w-full rounded-lg p-4 justify-between font-bold ';
       combinedClasses += disabled
@@ -62,13 +61,15 @@ case 'step': {
       break;
     }
 
-    // 'primary' (기본 보라/회색 토글)
+    /** =========================
+     *  기본 Primary (토글/일반)
+     * ========================= */
     case 'primary':
     default: {
       combinedClasses += ' w-full rounded-full py-3 px-4 font-bold ';
-      combinedClasses += isActive
-        ? ' bg-[#8371FD] text-white hover:bg-purple-600'
-        : ' bg-[#464B51] text-white hover:bg-gray-600';
+      combinedClasses += disabled || !isActive
+        ? ' bg-[#464B51] text-white cursor-not-allowed opacity-70'
+        : ' bg-[#8371FD] text-white hover:bg-purple-600';
       break;
     }
   }
