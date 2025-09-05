@@ -2,17 +2,6 @@ import React, { useMemo } from 'react';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
 // --- Helper Sub-components ---
-const CheckIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M9.75 3.75L4.5 9L2.25 6.75"
-      stroke="white"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 /**
  * @param {object} props

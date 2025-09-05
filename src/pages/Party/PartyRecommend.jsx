@@ -21,6 +21,9 @@ import prodTea from '../../assets/images/tea.svg';
 
 import PartyBg from '../../assets/images/partybg.svg'; // 헤더 배경 이미지
 import PackageCard from '../../components/domain/PackageCard';
+import PartyCardClose from '../../components/domain/PartyCardClose';
+import MyPartyBg from '../../assets/images/for-my-party-bg.svg';
+import Coupon from '../../assets/images/coupon.svg';
 const SIMILAR_ITEMS = [
   { id: 1, title: '라브앤프로포즈 커플 우정반지 세트', price: 45000, img: prodCard },
   { id: 2, title: '플로리스트엣닷 프리미엄 생화 꽃다발', price: 32000, img: prodFlower },
@@ -85,7 +88,7 @@ export default function PartyRecommend() {
   const [selectedItems, setSelectedItems] = useState({
     pkg1: [1, 2, 3],
   });
-
+  const [hasActiveParty, setHasActiveParty] = useState(true);
   const handleNavigation = (path) => {
     console.log(`Navigating to ${path}`);
     nav(path);
@@ -104,6 +107,7 @@ export default function PartyRecommend() {
   return (
     <main className={' h-full min-h-screen mx-auto font-pretendard flex flex-col  bg-[#F8F8F8]'}>
       {/* 상단 UI */}
+
       <div className="relative px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 overflow-hidden bg-[#181A1C] text-white">
         <img src={PartyBg} alt="Party Background" className="absolute inset-0 z-0 object-cover w-full h-full" />
         <div className="relative z-10">
@@ -119,20 +123,43 @@ export default function PartyRecommend() {
       <div className="p-4 pt-0 pb-12 bg-[#181A1C]">
         <button
           onClick={() => handleNavigation('/party/start')}
-          className=" w-full h-10 rounded-xl bg-[#7F6BFF] text-white text-[14px] font-semibold active:opacity-90 flex items-center justify-center gap-2"
+          className=" w-full h-10 rounded-xl bg-[#7F6BFF] text-white text-[0.875rem] font-pretendard font-medium active:opacity-90 flex items-center justify-center gap-2"
         >
           <Icon name="party-nav" size={0.9375} />
           맞춤 파티 시작하기
         </button>
       </div>
-
+      {hasActiveParty && (
+        <section className="relative px-4 pt-6 pb-10 overflow-hidden -mt-5 rounded-t-[1.125rem] bg-[#E2DEFF]">
+          {/* 2. img가 세로로 늘어나지 않도록 스타일 수정 */}
+          <img
+            src={MyPartyBg}
+            alt="My Party Background"
+            className="absolute top-0 left-0 z-0 object-cover w-full pointer-events-none"
+          />
+          <div className="relative z-10">
+            <h2 className="text-[1.125rem] font-pretendard font-semibold text-[#191A1C] mb-3">나만의 파티 준비</h2>
+            <div className="flex justify-center">
+              <PartyCardClose title="프로포즈" progress={0.05} />
+            </div>
+          </div>
+        </section>
+      )}
       {/* 하단 추천 세트 영역 */}
-      <div className="flex-1 rounded-t-[1.125rem] bg-[linear-gradient(180deg,_#D6CFFF_0%,_#FFF_18%)] text-black p-4 pt-[1.87rem] space-y-4 -mt-5 relative">
+      <div
+        className={`
+                    flex-1 text-black pl-4 pr-4 pb-4 pt-[1.87rem] space-y-4 -mt-5 relative
+                    ${
+                      hasActiveParty
+                        ? 'bg-white' // 파티가 있을 때: 흰색 배경만 적용
+                        : 'rounded-t-[1.125rem] bg-[linear-gradient(180deg,_#D6CFFF_0%,_#FFF_18%)]' // 파티가 없을 때: 라운드와 그라데이션 적용
+                    }
+                `}
+      >
+        {hasActiveParty && <img src={Coupon} alt="20% 할인 쿠폰" className="w-full h-auto" />}
         <h2 className="text-[1.125rem] font-pretendard  font-semibold text-[#191A1C]">목적별로 골라보는 추천 세트</h2>
-
         <div className="flex pb-4 space-x-4 overflow-x-auto scrollbar-hide ">
           {PACKAGES.map((pkg) => (
-            // 각 카드의 너비를 지정하고 줄어들지 않도록 설정
             <div key={pkg.id} className="w-[85vw] max-w-[340px] flex-shrink-0">
               <PackageCard
                 variant="interactive"
