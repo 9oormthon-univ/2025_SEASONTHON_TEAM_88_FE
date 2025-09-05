@@ -121,7 +121,7 @@ function ChipCheckGroup({ options, selected, onToggle }) {
 
 /** 패키지 카드 (선택 시 하단 아이템 노출) */
 function PackageCard({ data, selected, onSelect }) {
-  // 카드: 배경/테두리 항상 #F8F8F8 (선택해도 동일)
+  // 카드: 배경/테두리 항상 #F8F8F8
   const containerBase =
     "relative w-full rounded-[18px] p-[18px] transition-colors border";
   const containerClass = "bg-[#F8F8F8] border-[#F8F8F8]";
@@ -153,10 +153,8 @@ function PackageCard({ data, selected, onSelect }) {
         <div
           className={[
             "ml-auto flex justify-center items-center",
-            "w-4 h-4 rounded-full", // 1rem
-            selected
-              ? "border border-[#8371FD] p-[0.1875rem]" // 선택 시
-              : "border border-[#81878B]",              // 기본
+            "w-4 h-4 rounded-full",
+            selected ? "border border-[#8371FD] p-[0.1875rem]" : "border border-[#81878B]",
           ].join(" ")}
         >
           {selected && (
@@ -188,15 +186,19 @@ function PackageCard({ data, selected, onSelect }) {
                 </span>
               </div>
 
-              {/* 상품명/가격 */}
-              <div className="mt-2 text-[#191A1C] font-pretendard text-[10px] leading-4 truncate">
+              {/* 상품명 (Caption 04: 0.625rem / 1rem) */}
+              <div className="mt-2 text-[#191A1C] font-pretendard text-[0.625rem] leading-[1rem] truncate">
                 {it.name}
               </div>
+
+              {/* ✅ 가격 스펙 반영 */}
               <div className="mt-1 flex items-end gap-1">
-                <span className="text-[#191A1C] font-pretendard text-[10px] leading-4">
+                {/* 숫자: 1rem / 600 / 1.4rem */}
+                <span className="text-[#191A1C] font-pretendard text-[1rem] font-semibold leading-[1.4rem]">
                   {it.price.toLocaleString()}
                 </span>
-                <span className="text-[#191A1C] font-pretendard text-[14px] leading-[22px]">
+                {/* '원': 0.875rem / 400 / 1.4rem */}
+                <span className="text-[#191A1C] font-pretendard text-[0.875rem] font-normal leading-[1.4rem]">
                   원
                 </span>
               </div>
