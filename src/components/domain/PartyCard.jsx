@@ -1,43 +1,44 @@
 // src/components/domain/PartyCard.jsx
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import giftbox from "../../assets/icons/giftbox.svg";
-
-// 체크 아이콘 (회색/보라) – SVG를 컴포넌트로 불러와 stroke 제어
 import { ReactComponent as CheckGray } from "../../assets/icons/check-round(gray).svg?react";
 import { ReactComponent as CheckPurple } from "../../assets/icons/check-round.svg?react";
 
 export default function PartyCard({
   title,
-  tasks = [],          // 초기 리스트
-  progress = 0.223,
-  onAdd,               // 필요 시 외부 콜백
-  onDelete,            // 필요 시 외부 콜백
+  tasks = [],
+  onAdd,
+  onDelete,
+  onProgressChange, // 진행률 변경 콜백
 }) {
-  // 내부 리스트 상태(추가 반영)
   const [items, setItems] = useState(tasks);
-
-  // 각 항목 체크 상태
   const [checked, setChecked] = useState({});
-
-  // “리스트 추가하기” 입력 모드
   const [adding, setAdding] = useState(false);
   const [newText, setNewText] = useState("");
 
-  // 진행바 계산
-  const BAR_TOTAL_REM = 17.625;
-  const filledRem = useMemo(
-    () => Math.max(0, Math.min(1, progress)) * BAR_TOTAL_REM,
-    [progress]
+  // 진행률 계산
+  const total = items.length;
+  const checkedCount = useMemo(
+    () => items.reduce((acc, _, i) => acc + (checked[i] ? 1 : 0), 0),
+    [items, checked]
   );
+  const ratio = total > 0 ? checkedCount / total : 0; // 0~1
+  const done = ratio >= 1;
+
+  const BAR_TOTAL_REM = 17.625;
+  const filledRem = ratio * BAR_TOTAL_REM;
+
+  // 진행률을 부모(PartyCardClose)로 전달
+  useEffect(() => {
+    onProgressChange?.(ratio);
+  }, [ratio, onProgressChange]);
 
   const toggleCheck = (idx) => {
     setChecked((prev) => ({ ...prev, [idx]: !prev[idx] }));
   };
 
-  // 입력 행 추가/취소/확정
-  const startAdding = () => {
-    if (!adding) setAdding(true);
-  };
+  // 리스트 추가 flow
+  const startAdding = () => !adding && setAdding(true);
   const cancelAdding = () => {
     setAdding(false);
     setNewText("");
@@ -45,16 +46,12 @@ export default function PartyCard({
   const commitAdd = () => {
     const t = newText.trim();
     if (!t) return;
-    const next = [...items, t];
-    setItems(next);
+    setItems((prev) => [...prev, t]);
     setNewText("");
     setAdding(false);
-    if (onAdd) onAdd(t);
+    onAdd?.(t);
   };
 
-  // 버튼 상태
-  // - 기본: 추가 모드 아니면 회색이지만 클릭으로 입력행 노출
-  // - 추가 모드: 텍스트 입력 전엔 disabled, 입력하면 활성화되어 확정 동작
   const buttonDisabled = adding ? newText.trim().length === 0 : false;
   const buttonAction = adding ? commitAdd : startAdding;
 
@@ -73,7 +70,11 @@ export default function PartyCard({
           <span className="font-pretendard text-[0.625rem] font-semibold leading-[1rem] text-[#8371FD]">
             준비 시작
           </span>
-          <span className="font-pretendard text-[0.625rem] font-semibold leading-[1rem] text-[#464B51]">
+          <span
+            className={`font-pretendard text-[0.625rem] font-semibold leading-[1rem] ${
+              done ? "text-[#8371FD]" : "text-[#464B51]"
+            }`}
+          >
             준비 완료!
           </span>
         </div>
@@ -91,18 +92,23 @@ export default function PartyCard({
         </div>
       </div>
 
-      {/* 준비 리스트 */}
+      {/* 준비 리스트 + 배지 */}
       <div className="mt-5 flex items-center justify-between">
         <h4 className="font-pretendard text-[1.125rem] font-semibold leading-[1.575rem] text-[#191A1C]">
           준비 리스트
         </h4>
-        <span className="inline-flex w-[3.375rem] h-[1.4375rem] items-center justify-center rounded-full bg-[#EFE8FF]">
-          <span className="font-pretendard text-[0.75rem] font-medium leading-[1.2rem] text-[#44388C]">
-            진행중
+        {done ? (
+          <span className="inline-flex w-[3.375rem] h-[1.4375rem] items-center justify-center rounded-[2rem] bg-[#8371FD]">
+            <span className="font-pretendard text-[0.75rem] font-medium leading-[1.2rem] text-white">완료</span>
           </span>
-        </span>
+        ) : (
+          <span className="inline-flex w-[3.375rem] h-[1.4375rem] items-center justify-center rounded-[2rem] bg-[#EFE8FF]">
+            <span className="font-pretendard text-[0.75rem] font-medium leading-[1.2rem] text-[#44388C]">진행중</span>
+          </span>
+        )}
       </div>
 
+      {/* 리스트 */}
       <ul className="mt-3 space-y-2">
         {items.map((text, idx) => {
           const isChecked = !!checked[idx];
@@ -116,78 +122,50 @@ export default function PartyCard({
                 {text}
               </span>
               {isChecked ? (
-                <CheckPurple
-                  className="w-[0.83331rem] h-[0.83331rem] shrink-0"
-                  style={{ strokeWidth: 1, stroke: "#8371FD" }}
-                />
+                <CheckPurple className="w-[0.83331rem] h-[0.83331rem] shrink-0" style={{ strokeWidth: 1, stroke: "#8371FD" }} />
               ) : (
-                <CheckGray
-                  className="w-[0.83331rem] h-[0.83331rem] shrink-0"
-                  style={{ strokeWidth: 1, stroke: "#464B51" }}
-                />
+                <CheckGray className="w-[0.83331rem] h-[0.83331rem] shrink-0" style={{ strokeWidth: 1, stroke: "#464B51" }} />
               )}
             </li>
           );
         })}
 
-        {/* 입력 행(리스트 추가하기 클릭 시 노출) */}
+        {/* 입력 행 */}
         {adding && (
           <li className="flex items-center justify-between rounded-[0.5rem] bg-[#F8F8F8] px-4 py-[0.625rem]">
-            {/* X(취소) */}
-            <button
-              type="button"
-              onClick={cancelAdding}
-              className="mr-2 text-[#9AA0A6] text-[1rem] leading-none"
-              aria-label="입력 취소"
-            >
-              ×
-            </button>
-
-            {/* 입력창 */}
+            <button type="button" onClick={cancelAdding} className="mr-2 text-[#9AA0A6] text-[1rem] leading-none" aria-label="입력 취소">×</button>
             <input
               autoFocus
               value={newText}
               onChange={(e) => setNewText(e.target.value)}
               placeholder="편지 작성하기"
               className="flex-1 bg-transparent outline-none text-[#191A1C] placeholder:text-[#9AA0A6] font-pretendard text-[0.875rem]"
+              onClick={(e) => e.stopPropagation()}
             />
-
-            {/* 체크(회색, 단순 디스플레이) */}
-            <CheckGray
-              className="ml-2 w-[0.83331rem] h-[0.83331rem] shrink-0"
-              style={{ strokeWidth: 1, stroke: "#464B51" }}
-            />
+            <CheckGray className="ml-2 w-[0.83331rem] h-[0.83331rem] shrink-0" style={{ strokeWidth: 1, stroke: "#464B51" }} />
           </li>
         )}
       </ul>
 
-      {/* 리스트 추가 버튼 */}
+      {/* 리스트 추가 버튼(항상 회색) */}
       <button
         type="button"
-        disabled={buttonDisabled}
-        onClick={buttonAction}
+        disabled={adding ? newText.trim().length === 0 : false}
+        onClick={adding ? (() => { const t = newText.trim(); if (!t) return; setItems((p)=>[...p,t]); setNewText(""); setAdding(false); onAdd?.(t); }) : () => setAdding(true)}
+        aria-disabled={adding ? newText.trim().length === 0 : false}
         className={[
-          "mt-4 flex w-[18.0625rem] h-[2.375rem] items-center justify-center rounded-[2rem]",
-          // 입력 중엔 내용 없으면 비활성 유지, 내용 있으면 진하게
-          adding
-            ? newText.trim()
-              ? "bg-[#353A40] text-white active:opacity-90"
-              : "bg-[#81878B] text-white cursor-not-allowed"
-            : "bg-[#81878B] text-white", // 입력 시작 전에는 회색이지만 클릭 가능(입력 모드로 전환)
+          "mt-4 flex w-[18.0625rem] h-[2.375rem] items-center justify-center",
+          "rounded-[2rem]",
+          "bg-[#81878B] text-white",
+          adding && !newText.trim() ? "cursor-not-allowed" : "active:opacity-90",
         ].join(" ")}
       >
-        <span className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem]">
-          리스트 추가하기
-        </span>
+        <span className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem]">리스트 추가하기</span>
       </button>
 
-      {/* (옵션) 파티 삭제 */}
+      {/* 파티 삭제 */}
       <div className="mt-2 text-right">
-        <button
-          type="button"
-          onClick={onDelete}
-          className="font-pretendard text-[0.625rem] font-semibold leading-[1rem] text-[#81878B] underline"
-        >
+        <button type="button" onClick={onDelete} className="font-pretendard text-[0.625rem] font-semibold leading-[1rem] text-[#81878B] underline">
           파티 삭제
         </button>
       </div>
