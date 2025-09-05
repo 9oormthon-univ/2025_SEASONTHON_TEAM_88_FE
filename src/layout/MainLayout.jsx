@@ -16,7 +16,7 @@ const MainLayout = ({ children, header, showBottomNav = true }) => {
       {/* 페이지로부터 전달받은 헤더를 렌더링합니다. */}
       {header}
 
-      <main className={`pt-[3.355rem]  ${showBottomNav ? 'pb-16' : ''}`}>{children}</main>
+      <main className={` pt-[3.355rem]  ${showBottomNav ? 'pb-16' : ''}`}>{children}</main>
 
       {showBottomNav && <BottomNav />}
     </div>

@@ -5,8 +5,6 @@ import Icon from '../components/ui/Icon';
 import Input from '../components/ui/Input';
 import { useState } from 'react';
 import Adver1 from '../assets/images/adver1.svg';
-import ProductCard from '../components/domain/ProductCard';
-import { recommendedProducts } from '../mocks/products';
 import CategoryMenu from '../components/domain/CategoryMenu';
 import RecommendedProducts from '../components/domain/RecommendedProducts';
 import RankedProducts from '../components/domain/RankedProducts';

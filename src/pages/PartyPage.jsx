@@ -1,15 +1,15 @@
-import React from "react";
-import MainLayout from "../layout/MainLayout";
-import Header from "../layout/Header";
-import Icon from "../components/ui/Icon";
+import React from 'react';
+import MainLayout from '../layout/MainLayout';
+import Header from '../layout/Header';
+import Icon from '../components/ui/Icon';
 
-import PartyRecommend from "./Party/PartyRecommend";
+import PartyRecommend from './Party/PartyRecommend';
 
 const PartyPage = () => {
   const subHeader = (
     <Header
-      className="text-white bg-black"
-      left={<h1 className="text-xl font-bold">내 파티</h1>}
+      className="text-white bg-[#181A1C]"
+      left={<h1 className="font-pretendard font-semibold text-[1.25rem] text-[#8371FD]">내 파티</h1>}
       right={
         <div className="flex items-center space-x-4">
           <button aria-label="알림">
@@ -25,7 +25,6 @@ const PartyPage = () => {
 
   return (
     <MainLayout header={subHeader} showBottomNav={true}>
-      {/* ✅ PartyRecommend 컴포넌트 삽입 */}
       <PartyRecommend />
     </MainLayout>
   );
