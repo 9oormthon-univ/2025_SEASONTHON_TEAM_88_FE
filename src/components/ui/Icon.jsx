@@ -20,9 +20,10 @@ import { ReactComponent as PartyNavIcon } from '../../assets/icons/partynav.svg?
 import { ReactComponent as LikeIcon } from '../../assets/icons/like.svg?react';
 import { ReactComponent as AroundIcon } from '../../assets/icons/around.svg?react';
 import { ReactComponent as HomeNavIcon } from '../../assets/icons/home-nav.svg?react';
-import { ReactComponent as CheckRoundGrayIcon } from '../../assets/icons/check-round(gray).svg?react';
-import { ReactComponent as CrossIcon } from '../../assets/icons/cross.svg?react'; 
-
+import { ReactComponent as RibbonBox } from '../../assets/icons/giftbox-ribbon.svg?react';
+import { ReactComponent as BlankCheck } from '../../assets/icons/blank-check.svg?react';
+import { ReactComponent as FilledCheck } from '../../assets/icons/filled-check.svg?react';
+import { ReactComponent as CrossIcon } from '../../assets/icons/cross.svg?react';
 /**
  * SVG 아이콘을 일관된 방식으로 보여주기 위한 컴포넌트입니다.
  * 이름을 props로 받아 해당하는 아이콘을 렌더링합니다.
@@ -51,8 +52,10 @@ const Icon = ({ name, size = 1.5, color, className }) => {
     like: LikeIcon,
     around: AroundIcon,
     'home-nav': HomeNavIcon,
-    'check-round-gray': CheckRoundGrayIcon,
-    cross: CrossIcon, // ✅ 추가
+    'giftbox-ribbon': RibbonBox,
+    'blank-check': BlankCheck,
+    'filled-check': FilledCheck,
+    cross: CrossIcon,
   };
 
   const IconComponent = iconMap[name];
@@ -63,9 +66,7 @@ const Icon = ({ name, size = 1.5, color, className }) => {
   }
 
   // 하트 svg 크기 달라서 조정
-  const style = name.startsWith('heart-filled')
-    ? { transform: 'scale(1.3)' }
-    : {};
+  const style = name.startsWith('heart-filled') ? { transform: 'scale(1.3)' } : {};
 
   return (
     <IconComponent

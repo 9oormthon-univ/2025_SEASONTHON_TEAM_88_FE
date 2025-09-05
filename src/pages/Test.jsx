@@ -1,24 +1,24 @@
 // src/pages/Test.jsx
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import Select from "../components/ui/Select";
-import Header from "../layout/Header";
-import MainLayout from "../layout/MainLayout";
-import Icon from "../components/ui/Icon";
-import Button from "../components/ui/Button";
-import PartyCardClose from "../components/domain/PartyCardClose";
-import ConfirmModal from "../components/ui/ConfirmModal"; // ✅ 삭제 확인 모달
+import Select from '../components/ui/Select';
+import Header from '../layout/Header';
+import MainLayout from '../layout/MainLayout';
+import Icon from '../components/ui/Icon';
+import Button from '../components/ui/Button';
+import PartyCardClose from '../components/domain/PartyCardClose';
+import ConfirmModal from '../components/ui/ConfirmModal'; // ✅ 삭제 확인 모달
 
 const Test = () => {
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState('');
   const [isInParty, setIsInParty] = useState(true);
   const [openDelete, setOpenDelete] = useState(false); // ✅ 모달 상태
 
   const fruitOptions = [
-    { value: "apple", label: "사과" },
-    { value: "banana", label: "바나나" },
-    { value: "grape", label: "포도" },
-    { value: "orange", label: "오렌지" },
+    { value: 'apple', label: '사과' },
+    { value: 'banana', label: '바나나' },
+    { value: 'grape', label: '포도' },
+    { value: 'orange', label: '오렌지' },
   ];
 
   const handleSelectChange = (event) => {
@@ -50,11 +50,7 @@ const Test = () => {
     />
   );
 
-  const sampleTasks = [
-    "🥨 브리오슈 4입 구매하기",
-    "🍾 프루티 스파클링 구매하기",
-    "🎉 파스텔 홈파티 가랜드 구매하기",
-  ];
+  const sampleTasks = ['🥨 브리오슈 4입 구매하기', '🍾 프루티 스파클링 구매하기', '🎉 파스텔 홈파티 가랜드 구매하기'];
 
   return (
     <MainLayout header={testHeader} showBottomNav={false} className="bg-green-500">
@@ -71,31 +67,24 @@ const Test = () => {
 
         <div className="p-4 mt-4 bg-gray-800 rounded-md">
           <p className="text-sm text-gray-400">현재 선택된 값:</p>
-          <p className="text-lg font-bold text-purple-400">
-            {selectedValue || "아직 선택되지 않았습니다."}
-          </p>
+          <p className="text-lg font-bold text-purple-400">{selectedValue || '아직 선택되지 않았습니다.'}</p>
         </div>
 
-        {/* ✅ 접힘 카드: 내부의 '파티 삭제' 클릭 시 모달 오픈 */}
         <PartyCardClose
           title="브라이덜 샤워"
           tasks={sampleTasks}
           progress={0.223}
           defaultOpen={false}
-          onAdd={() => console.log("리스트 추가")}
-          onDelete={() => setOpenDelete(true)}
+          onAdd={() => console.log('리스트 추가')}
+          onDelete={() => console.log('파티 삭제')}
         />
 
         <div className="space-y-3">
-          <Button
-            variant="primary"
-            isActive={isInParty}
-            onClick={() => setIsInParty(!isInParty)}
-          >
-            {isInParty ? "파티에서 빼기" : "내 파티에 담기"}
+          <Button variant="primary" isActive={isInParty} onClick={() => setIsInParty(!isInParty)}>
+            {isInParty ? '파티에서 빼기' : '내 파티에 담기'}
           </Button>
 
-          <Button variant="icon" onClick={() => alert("파티 시작!")}>
+          <Button variant="icon" onClick={() => alert('파티 시작!')}>
             <div className="flex items-center gap-2">
               <Icon name="party-nav" size={1.25} />
               <span>내 파티 시작하기</span>
@@ -117,7 +106,7 @@ const Test = () => {
         onCancel={() => setOpenDelete(false)}
         onConfirm={() => {
           // TODO: 실제 삭제 로직 연결
-          console.log("파티 삭제 확정");
+          console.log('파티 삭제 확정');
           setOpenDelete(false);
         }}
         title="파티를 삭제하시겠습니까?"
