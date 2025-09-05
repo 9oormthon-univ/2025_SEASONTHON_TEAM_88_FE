@@ -1,5 +1,5 @@
 // src/pages/Party/PartyRecommend.jsx
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // 헤더/배지/배너
@@ -98,6 +98,7 @@ export default function PartyRecommend() {
     >
       {/* 상단 다크 히어로 */}
       <header className="relative px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 overflow-hidden">
+        {/* 배경 일러스트 */}
         <img
           src={heroImg}
           alt=""
@@ -109,8 +110,8 @@ export default function PartyRecommend() {
             <div className="flex items-center gap-3">
               <button aria-label="알림" className="p-2 -m-2 opacity-90">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2Z" fill="currentColor"/>
-                  <path d="M18 16V11a6 6 0 0 0-12 0v5l-2 2h16l-2-2Z" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2Z" fill="currentColor" />
+                  <path d="M18 16V11a6 6 0 0 0-12 0v5l-2 2h16l-2-2Z" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </button>
               <button aria-label="카트" className="p-2 -m-2 opacity-90">
@@ -139,7 +140,7 @@ export default function PartyRecommend() {
       </header>
 
       {/* 본문 (라운드 탑) */}
-      <section className="flex-1 overflow-auto bg-white text-black rounded-t-3xl">
+      <section className="flex-1 overflow-auto text-black bg-white rounded-t-3xl">
         <div className="px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-6">
           {/* 진행 카드 */}
           <div className="bg-gradient-to-r from-[#EFE8FF] to-[#F7F4FF] rounded-2xl p-3">
@@ -147,22 +148,14 @@ export default function PartyRecommend() {
               <span>준비 시작</span>
               <span>준비 완료</span>
             </div>
-            <div className="mt-2 relative">
+            <div className="relative mt-2">
               <div className="h-2 rounded-full bg-white/60" />
-              <div
-                className="absolute left-0 top-0 h-2 rounded-full bg-[#7F6BFF]"
-                style={{ width: "35%" }}
-              />
-              <img
-                src={badgeGift}
-                alt=""
-                className="absolute -translate-y-2 w-7 h-7"
-                style={{ left: "33%" }}
-              />
+              <div className="absolute left-0 top-0 h-2 rounded-full bg-[#7F6BFF]" style={{ width: "35%" }} />
+              <img src={badgeGift} alt="" className="absolute -translate-y-2 w-7 h-7" style={{ left: "33%" }} />
             </div>
           </div>
 
-          {/* ⬇️ 예산 맞춤 패키지 (가로 스크롤 카드 3장) */}
+          {/* 예산 맞춤 패키지 (가로 스크롤 카드 3장) */}
           <section>
             <h3 className="text-[16px] font-semibold mb-3">
               예산에 맞춘 특별한 프로포즈 세트예요
@@ -172,14 +165,7 @@ export default function PartyRecommend() {
               <div className="flex gap-4 pr-1">
                 {PACKAGE_SETS.map((pkg) => {
                   const selected = selectedMap[pkg.id] ?? [];
-                  const sum = useMemo(
-                    () =>
-                      selected.reduce((acc, key) => {
-                        const f = pkg.items.find((x) => x.key === key);
-                        return acc + (f ? f.price : 0);
-                      }, 0),
-                    [selected, pkg.items]
-                  );
+                  const sum = getSum(pkg);
 
                   return (
                     <article
@@ -271,11 +257,8 @@ export default function PartyRecommend() {
             <h4 className="text-[14px] font-semibold mb-3">프로포즈 세팅 아이디어</h4>
             <div className="grid grid-cols-3 gap-3">
               {IDEA_GRID.map((it) => (
-                <figure
-                  key={it.id}
-                  className="rounded-2xl overflow-hidden border border-gray-200 bg-white"
-                >
-                  <div className="h-24 grid place-items-center bg-gray-50">
+                <figure key={it.id} className="overflow-hidden bg-white border border-gray-200 rounded-2xl">
+                  <div className="grid h-24 place-items-center bg-gray-50">
                     <img src={it.img} alt={it.label} className="w-14 h-14" />
                   </div>
                   <figcaption className="p-2 text-[12px] text-gray-700">{it.label}</figcaption>
@@ -294,13 +277,11 @@ export default function PartyRecommend() {
                     key={it.id}
                     className="min-w-[8.5rem] w-[8.5rem] rounded-2xl border border-gray-200 overflow-hidden bg-white"
                   >
-                    <div className="h-24 grid place-items-center bg-gray-50">
+                    <div className="grid h-24 place-items-center bg-gray-50">
                       <img src={it.img} alt="" className="w-14 h-14" />
                     </div>
                     <div className="p-2">
-                      <p className="text-[12px] text-gray-800 line-clamp-2 min-h-[2.25rem]">
-                        {it.title}
-                      </p>
+                      <p className="text-[12px] text-gray-800 line-clamp-2 min-h-[2.25rem]">{it.title}</p>
                       <div className="mt-1 text-[13px] font-semibold">
                         {it.price.toLocaleString()}원
                       </div>
