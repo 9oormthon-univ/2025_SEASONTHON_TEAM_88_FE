@@ -7,12 +7,6 @@ import MainLayout from '../layout/MainLayout';
 import Icon from '../components/ui/Icon';
 import Button from '../components/ui/Button';
 import PartyCardClose from '../components/domain/PartyCardClose';
-import Select from '../components/ui/Select';
-import Header from '../layout/Header';
-import MainLayout from '../layout/MainLayout';
-import Icon from '../components/ui/Icon';
-import Button from '../components/ui/Button';
-import PartyCardClose from '../components/domain/PartyCardClose';
 import ConfirmModal from '../components/ui/ConfirmModal'; // ✅ 삭제 확인 모달
 
 const Test = () => {
@@ -76,7 +70,6 @@ const Test = () => {
           <p className="text-lg font-bold text-purple-400">{selectedValue || '아직 선택되지 않았습니다.'}</p>
         </div>
 
-        {/* ✅ 접힘 카드: 내부의 '파티 삭제' 클릭 시 모달 오픈 */}
         <PartyCardClose
           title="브라이덜 샤워"
           tasks={sampleTasks}

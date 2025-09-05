@@ -23,7 +23,7 @@ import { ReactComponent as HomeNavIcon } from '../../assets/icons/home-nav.svg?r
 import { ReactComponent as RibbonBox } from '../../assets/icons/giftbox-ribbon.svg?react';
 import { ReactComponent as BlankCheck } from '../../assets/icons/blank-check.svg?react';
 import { ReactComponent as FilledCheck } from '../../assets/icons/filled-check.svg?react';
-
+import { ReactComponent as CrossIcon } from '../../assets/icons/cross.svg?react';
 /**
  * SVG 아이콘을 일관된 방식으로 보여주기 위한 컴포넌트입니다.
  * 이름을 props로 받아 해당하는 아이콘을 렌더링합니다.
@@ -55,7 +55,6 @@ const Icon = ({ name, size = 1.5, color, className }) => {
     'giftbox-ribbon': RibbonBox,
     'blank-check': BlankCheck,
     'filled-check': FilledCheck,
-    'check-round-gray': CheckRoundGrayIcon,
     cross: CrossIcon,
   };
 

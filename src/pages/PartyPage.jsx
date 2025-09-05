@@ -2,7 +2,6 @@ import React from 'react';
 import MainLayout from '../layout/MainLayout';
 import Header from '../layout/Header';
 import Icon from '../components/ui/Icon';
-
 import PartyRecommend from './Party/PartyRecommend';
 
 const PartyPage = () => {

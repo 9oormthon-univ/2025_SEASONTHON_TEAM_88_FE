@@ -127,7 +127,7 @@ export default function PartyRecommend() {
       </div>
 
       {/* 하단 추천 세트 영역 */}
-      <div className="flex-1 bg-white rounded-t-3xl text-black p-4 pt-[1.87rem] space-y-4 -mt-5 relative">
+      <div className="flex-1 rounded-t-[1.125rem] bg-[linear-gradient(180deg,_#D6CFFF_0%,_#FFF_18%)] text-black p-4 pt-[1.87rem] space-y-4 -mt-5 relative">
         <h2 className="text-[1.125rem] font-pretendard  font-semibold text-[#191A1C]">목적별로 골라보는 추천 세트</h2>
 
         <div className="flex pb-4 space-x-4 overflow-x-auto scrollbar-hide ">
