@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-
+import Icon from '../ui/Icon';
+import Button from '../ui/Button';
 // --- Helper Sub-components ---
 const CheckIcon = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -86,8 +87,8 @@ export default function PackageCard({
     <div className="flex items-start justify-between">
       <div>
         <h3
-          className={`font-pretendard text-[1.125rem] font-semibold leading-[1.575rem] ${
-            selected ? 'text-gray-800' : 'text-gray-500'
+          className={`max-w-[170px] font-pretendard text-[1.125rem] font-semibold leading-[1.575rem] truncate ${
+            variant === 'selectable' ? (selected ? 'text-[#191A1C]' : 'text-gray-500') : 'text-[#191A1C]'
           }`}
         >
           {data.title} <span>{data.emoji}</span>
@@ -107,7 +108,7 @@ export default function PackageCard({
         </div>
       )}
       {variant === 'interactive' && (
-        <span className="px-2 py-1 text-xs font-semibold text-purple-600 bg-purple-100 rounded-md">
+        <span className="px-2 py-1 text-[0.625rem] font-normal text-[#6253C1] bg-[#F2F0FF] rounded-md">
           패키지 {formatPriceToKorean(DISCOUNT_AMOUNT)} 할인
         </span>
       )}
@@ -118,7 +119,11 @@ export default function PackageCard({
     <div className="flex w-full gap-3 mt-4">
       {data.items.map((it) => (
         <div key={it.id} className="w-[100px]">
-          <img src={it.img} alt={it.name} className="w-full h-[90px] rounded-[10px] object-cover bg-gray-200" />
+          <img
+            src={it.img}
+            alt={it.name}
+            className="w-full h-[5.625rem] sm:h-[7rem] md:h-[8rem] rounded-[10px] object-cover bg-gray-200"
+          />
           <div className="mt-2 text-[#191A1C] font-pretendard text-[0.625rem] leading-[1rem] truncate">{it.name}</div>
           <div className="mt-1 text-sm font-semibold text-gray-800 font-pretendard">
             {formatPriceToKorean(it.price)}
@@ -129,28 +134,27 @@ export default function PackageCard({
   );
 
   const renderInteractiveItemList = () => (
-    <div className="grid grid-cols-3 gap-3 mt-4">
+    <div className="grid grid-cols-3 gap-[0.62rem] mt-[1.63rem]">
       {data.items.map((item) => {
         const isSelected = selectedItems.includes(item.id);
         return (
           <div key={item.id} className="cursor-pointer" onClick={() => onItemToggle(item.id)}>
-            <div className="relative">
-              <img src={item.img} alt={item.name} className="object-cover w-full h-24 rounded-lg" />
-              <span className="absolute left-2 bottom-2 h-4 px-2 rounded-full bg-black/50 text-white text-[10px] flex items-center justify-center">
+            <div className="relative w-[5.25rem] h-[5.625rem]">
+              <img src={item.img} alt={item.name} className="w-full h-full rounded-[10px] object-cover bg-gray-200" />
+              <span className="absolute left-2 bottom-2 h-4 px-2 rounded-full bg-black/60 text-white text-[0.625rem] font-normal font-pretendard flex items-center justify-center">
                 {item.label}
               </span>
-              <div
-                className={`absolute top-2 right-2 w-5 h-5 rounded-md border-2 flex items-center justify-center ${
-                  isSelected ? 'bg-[#6253C1] border-[#6253C1]' : 'bg-white/50 border-white'
-                }`}
-              >
-                {isSelected && <CheckIcon />}
+              <div className="absolute top-1 right-1">
+                <Icon name={isSelected ? 'filled-check' : 'blank-check'} />
               </div>
             </div>
-            <p className="mt-2 text-gray-700 truncate text-[0.625rem]" style={{ lineHeight: '160%' }}>
+            <p
+              className="mt-1 text-gray-900 font-pretendard font-normal truncate text-[0.625rem]"
+              style={{ lineHeight: '160%' }}
+            >
               {item.name}
             </p>
-            <p className="mt-1 text-sm font-bold text-gray-900">{formatPriceToKorean(item.price)}</p>
+            <p className=" text-[1rem] font-pretendard font-semibold text-gray-900">{item.price.toLocaleString()}원</p>
           </div>
         );
       })}
@@ -159,7 +163,7 @@ export default function PackageCard({
 
   return (
     <div
-      className="w-full p-4 bg-white border border-gray-100 shadow-sm rounded-2xl"
+      className="w-full p-[1.25rem] pt-[1.38rem] pb-[1.38rem] bg-[#F8F8F8] border border-gray-100 shadow-sm rounded-2xl "
       role="button"
       tabIndex={0}
       onClick={handleCardClick}
@@ -170,10 +174,14 @@ export default function PackageCard({
       {renderHeader()}
 
       {variant === 'interactive' && (
-        <div className="mt-2 text-sm">
-          <span className="text-gray-500">총 금액: </span>
-          <span className="font-bold text-[#6253C1]">{finalPrice.toLocaleString()}원</span>
-          <span className="ml-2 text-gray-400 line-through">{originalPrice.toLocaleString()}원</span>
+        <div className="mt-[0.25rem] text-sm">
+          <span className="text-[#464B51] text-[0.75rem] font-normal font-pretendard">총 금액: </span>
+          <span className="font-semibold mr-[0.19rem] text-[#8371FD] font-pretendard text-[0.75rem]">
+            {finalPrice.toLocaleString()}원
+          </span>
+          <span className="text-[0.625rem] font-pretendard text-gray-400 line-through">
+            {originalPrice.toLocaleString()}원
+          </span>
         </div>
       )}
 
@@ -182,9 +190,14 @@ export default function PackageCard({
       {variant === 'interactive' && renderInteractiveItemList()}
 
       {variant === 'interactive' && (
-        <button className="w-full mt-4 text-sm font-bold text-white bg-gray-700 rounded-lg h-11 active:bg-gray-800">
+        <Button
+          variant="primary"
+          isActive={selectedItems.length > 0}
+          onClick={() => console.log('파티 담기')}
+          className="font-pretendard text-[0.875rem] font-medium mt-[1.63rem]"
+        >
           내 파티에 담기
-        </button>
+        </Button>
       )}
     </div>
   );

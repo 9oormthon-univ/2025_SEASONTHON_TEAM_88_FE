@@ -127,10 +127,10 @@ export default function PartyRecommend() {
       </div>
 
       {/* 하단 추천 세트 영역 */}
-      <div className="flex-1 bg-[#F8F8F8] rounded-t-3xl text-black p-4 space-y-4 -mt-5 relative">
-        <h2 className="text-lg  font-bold text-[#181A1C]">목적별로 골라보는 추천 세트</h2>
+      <div className="flex-1 bg-white rounded-t-3xl text-black p-4 pt-[1.87rem] space-y-4 -mt-5 relative">
+        <h2 className="text-[1.125rem] font-pretendard  font-semibold text-[#191A1C]">목적별로 골라보는 추천 세트</h2>
 
-        <div className="flex pb-4 space-x-4 overflow-x-auto">
+        <div className="flex pb-4 space-x-4 overflow-x-auto scrollbar-hide ">
           {PACKAGES.map((pkg) => (
             // 각 카드의 너비를 지정하고 줄어들지 않도록 설정
             <div key={pkg.id} className="w-[85vw] max-w-[340px] flex-shrink-0">

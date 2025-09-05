@@ -25,11 +25,11 @@ const Button = ({
      *  - 피그마 스펙: w-full, h-12, rounded-2xl
      * ========================= */
     case 'cta': {
+      combinedClasses += ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
       combinedClasses +=
-        ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
-      combinedClasses += isActive && !disabled
-        ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
-        : ' bg-[#C9CED3] text-white cursor-not-allowed opacity-70';
+        isActive && !disabled
+          ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
+          : ' bg-[#C9CED3] text-white cursor-not-allowed opacity-70';
       break;
     }
 
@@ -39,8 +39,7 @@ const Button = ({
      *  - 비활성: 연회색
      * ========================= */
     case 'step': {
-      combinedClasses +=
-        ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
+      combinedClasses += ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
       if (disabled || !isActive) {
         combinedClasses += ' bg-[#C9CED3] text-white cursor-not-allowed opacity-70';
       } else {
@@ -66,10 +65,11 @@ const Button = ({
      * ========================= */
     case 'primary':
     default: {
-      combinedClasses += ' w-full rounded-full py-3 px-4 font-bold ';
-      combinedClasses += disabled || !isActive
-        ? ' bg-[#464B51] text-white cursor-not-allowed opacity-70'
-        : ' bg-[#8371FD] text-white hover:bg-purple-600';
+      combinedClasses += ' flex w-[17rem] py-2 justify-center items-center font-bold rounded-full ';
+      combinedClasses +=
+        disabled || !isActive
+          ? ' bg-[#81878B] text-white cursor-not-allowed opacity-70'
+          : ' bg-[#8371FD] text-white hover:bg-purple-600';
       break;
     }
   }
