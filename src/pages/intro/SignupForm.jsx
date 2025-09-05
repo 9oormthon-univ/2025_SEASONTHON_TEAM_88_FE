@@ -1,10 +1,9 @@
 // src/pages/intro/SignupForm.jsx
 import React, { useMemo, useState } from "react";
-// 아이콘 파일
-import WarningSmall from "../../assets/icons/warning-small.svg";
-import CheckSmall from "../../assets/icons/check-small.svg";
 import ChevronLeft from "../../assets/icons/chevron-left.svg";
-import Button from "../../components/ui/Button"; // ✅ 공용 버튼
+import CheckSmall from "../../assets/icons/check-small.svg";
+import WarningSmall from "../../assets/icons/warning-small.svg";
+import Button from "../../components/ui/Button";
 
 export default function SignupForm() {
   const [form, setForm] = useState({
@@ -24,7 +23,7 @@ export default function SignupForm() {
     email: false,
   });
 
-  // ------- validators -------
+  /* ------------------------ validators ------------------------ */
   const idOk = useMemo(() => /^[A-Za-z0-9]{6,10}$/.test(form.id.trim()), [form.id]);
 
   const pwOk = useMemo(() => {
@@ -42,13 +41,13 @@ export default function SignupForm() {
     [form.password2, form.password]
   );
 
-  const nameOk = useMemo(() => /^[A-Za-z가-힣]+$/.test(form.name), [form.name]);
+  const nameOk  = useMemo(() => /^[A-Za-z가-힣]+$/.test(form.name), [form.name]);
   const phoneOk = useMemo(() => /^01[016789]-\d{3,4}-\d{4}$/.test(form.phone), [form.phone]);
   const emailOk = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email), [form.email]);
 
   const allOk = idOk && pwOk && pw2Ok && nameOk && phoneOk && emailOk;
 
-  // ------- handlers -------
+  /* ------------------------ handlers ------------------------ */
   const onChange = (e) => {
     const { name, value } = e.target;
 
@@ -60,7 +59,7 @@ export default function SignupForm() {
       } else if (digits.length >= 8) {
         out = `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
       }
-      setForm((f) => ({ ...f, [name]: out.slice(0, 13) }));
+      setForm((f) => ({ ...f, phone: out.slice(0, 13) }));
       return;
     }
 
@@ -72,50 +71,45 @@ export default function SignupForm() {
     setTouched((t) => ({ ...t, [name]: true }));
   };
 
-  // ------- border 상태 유틸 -------
-  const borderState = (ok, isTouched) =>
-    isTouched ? (ok ? "border-emerald-500" : "border-red-500") : "border-[#B1B7BC]";
+  /* ---------------------- style helpers ---------------------- */
+  const baseInput =
+    "w-full h-11 rounded-xl bg-white px-3 outline-none text-black placeholder:text-[#81878B] " +
+    "font-pretendard text-[16px] leading-[1.2] border-[1.5px] transition-colors";
+  const borderCls = (ok, touched) =>
+    touched ? (ok ? "border-[#1DBE8B]" : "border-[#FF5C5C]") : "border-[#E3E6EA] focus:border-[#7F6BFF]";
 
+  const fieldWrap = "mb-6";
+  const labelCls =
+    "block font-pretendard text-[0.875rem] leading-[1.2rem] text-[#191A1C] font-medium mb-2";
+  const helperCls = "mt-1 text-[12px] text-[#8B90A0]";
+
+  /* --------------------------- UI ---------------------------- */
   return (
-    <div className="flex justify-center items-start min-h-screen bg-white py-10">
+    <div className="min-h-screen bg-white flex justify-center">
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          setTouched({
-            id: true,
-            password: true,
-            password2: true,
-            name: true,
-            phone: true,
-            email: true,
-          });
+          setTouched({ id: true, password: true, password2: true, name: true, phone: true, email: true });
           if (!allOk) return;
           alert("회원가입 정보가 유효합니다. (데모)");
         }}
-        className="w-[23.4375rem] bg-white pb-8 px-5"
+        className="w-[22.5rem] px-5 pt-12 pb-8"
         autoComplete="off"
       >
-        {/* 헤더 */}
-        <div className="pt-2 mb-6">
-          <button type="button" aria-label="뒤로가기" className="cursor-pointer mb-3">
-            <img src={ChevronLeft} alt="뒤로가기" className="w-6 h-6" />
+        {/* Header */}
+        <div className="mb-6">
+          <button type="button" aria-label="뒤로가기" className="p-2 -m-2">
+            <img src={ChevronLeft} alt="뒤로가기" className="w-5 h-5" />
           </button>
-          <h1 className="text-xl font-semibold leading-7">
-            <span>회원정보를 입력해주세요</span>
+          <h1 className="mt-2 font-pretendard text-[1.25rem] font-semibold leading-[1.75rem]">
+            회원정보를 입력해주세요
           </h1>
         </div>
 
-        {/* ===== ID ===== */}
-        <div className="mb-6">
-          <label className="block font-['Pretendard'] text-[0.75rem] leading-[1.2rem] text-[#81878B] mb-1">
-            ID (띄어쓰기 없이 영/숫자 6-10자)
-          </label>
-          <div
-            className={`relative flex items-center rounded-md border-[1.5px] bg-white h-11 w-full px-3 ${borderState(
-              idOk,
-              touched.id
-            )}`}
-          >
+        {/* 아이디 */}
+        <div className={fieldWrap}>
+          <label className={labelCls}>아이디</label>
+          <div className="relative">
             <input
               name="id"
               maxLength={10}
@@ -123,34 +117,24 @@ export default function SignupForm() {
               value={form.id}
               onChange={onChange}
               onBlur={onBlur}
-              className="w-full outline-none bg-transparent text-black text-base placeholder:text-[#81878B]"
+              className={`${baseInput} ${borderCls(idOk, touched.id)}`}
             />
             {touched.id && (
               <img
                 src={idOk ? CheckSmall : WarningSmall}
                 alt={idOk ? "valid" : "invalid"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5"
               />
             )}
           </div>
-          {touched.id && !idOk && (
-            <p className="text-xs text-red-500 mt-1">사용 불가능한 아이디입니다.</p>
-          )}
+          <p className={helperCls}>*띄어쓰기 없이 영/숫자 6-10자</p>
+          {touched.id && !idOk && <p className="mt-1 text-[12px] text-[#FF5C5C]">사용 불가능한 아이디입니다.</p>}
         </div>
 
-        {/* ===== Passwords ===== */}
-        <div className="mb-6">
-          <label className="block font-['Pretendard'] text-[0.75rem] leading-[1.2rem] text-[#81878B] mb-1">
-            비밀번호 (8~15자의 영문, 숫자 또는 특수문자 조합)
-          </label>
-
-          {/* 상단 비밀번호 */}
-          <div
-            className={`relative flex items-center rounded-t-md border-[1.5px] bg-white h-11 w-full px-3 border-b-0 ${borderState(
-              pwOk,
-              touched.password
-            )}`}
-          >
+        {/* 비밀번호 */}
+        <div className={fieldWrap}>
+          <label className={labelCls}>비밀번호</label>
+          <div className="relative">
             <input
               type="password"
               name="password"
@@ -159,90 +143,75 @@ export default function SignupForm() {
               value={form.password}
               onChange={onChange}
               onBlur={onBlur}
-              className="w-full outline-none bg-transparent text-black text-base placeholder:text-[#81878B]"
+              className={`${baseInput} rounded-t-xl ${borderCls(pwOk, touched.password)} border-b-0`}
             />
             {touched.password && (
               <img
                 src={pwOk ? CheckSmall : WarningSmall}
                 alt={pwOk ? "valid" : "invalid"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6"
+                className="absolute right-3 top-[22px] w-5 h-5"
               />
             )}
           </div>
 
-          {/* 하단 비밀번호 재입력 */}
-          <div
-            className={`relative -mt-px flex items-center rounded-b-md border-[1.5px] bg-white h-11 w-full px-3 ${borderState(
-              pw2Ok,
-              touched.password2
-            )}`}
-          >
+          <div className="relative -mt-px">
             <input
               type="password"
               name="password2"
               maxLength={15}
-              placeholder="비밀번호 재입력"
+              placeholder="비밀번호 확인"
               value={form.password2}
               onChange={onChange}
               onBlur={onBlur}
-              className="w-full outline-none bg-transparent text-black text-base placeholder:text-[#81878B]"
+              className={`${baseInput} rounded-b-xl ${borderCls(pw2Ok, touched.password2)}`}
             />
             {touched.password2 && (
               <img
                 src={pw2Ok ? CheckSmall : WarningSmall}
                 alt={pw2Ok ? "valid" : "invalid"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5"
               />
             )}
           </div>
 
+          <p className={helperCls}>*8~15자의 영문, 숫자 또는 특수문자 조합</p>
           {touched.password && !pwOk && (
-            <p className="text-xs text-red-500 mt-1">
-              8~15자의 영문, 숫자 또는 특수문자 조합을 사용해주세요.
-            </p>
+            <p className="mt-1 text-[12px] text-[#FF5C5C]">조건에 맞는 비밀번호를 입력해주세요.</p>
           )}
           {touched.password2 && !pw2Ok && (
-            <p className="text-xs text-red-500 mt-1">비밀번호가 일치하지 않습니다.</p>
+            <p className="mt-1 text-[12px] text-[#FF5C5C]">비밀번호가 일치하지 않습니다.</p>
           )}
         </div>
 
-        {/* ===== 이름 ===== */}
-        <div className="mb-6">
-          <div
-            className={`relative flex items-center rounded-md border-[1.5px] bg-white h-11 w-full px-3 ${borderState(
-              nameOk,
-              touched.name
-            )}`}
-          >
+        {/* 이름 */}
+        <div className={fieldWrap}>
+          <label className={labelCls}>이름</label>
+          <div className="relative">
             <input
               name="name"
               placeholder="이름"
               value={form.name}
               onChange={onChange}
               onBlur={onBlur}
-              className="w-full outline-none bg-transparent text-black text-base placeholder:text-[#81878B]"
+              className={`${baseInput} ${borderCls(nameOk, touched.name)}`}
             />
             {touched.name && (
               <img
                 src={nameOk ? CheckSmall : WarningSmall}
                 alt={nameOk ? "valid" : "invalid"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5"
               />
             )}
           </div>
           {touched.name && !nameOk && (
-            <p className="text-xs text-red-500 mt-1">특수기호, 공백 사용 불가</p>
+            <p className="mt-1 text-[12px] text-[#FF5C5C]">특수기호/공백은 사용할 수 없어요.</p>
           )}
         </div>
 
-        {/* ===== 휴대폰 ===== */}
-        <div className="mb-6">
-          <div
-            className={`relative flex items-center rounded-md border-[1.5px] bg-white h-11 w-full px-3 ${borderState(
-              phoneOk,
-              touched.phone
-            )}`}
-          >
+        {/* 휴대폰 번호 */}
+        <div className={fieldWrap}>
+          <label className={labelCls}>휴대폰 번호</label>
+          <div className="relative">
             <input
               name="phone"
               inputMode="numeric"
@@ -250,29 +219,25 @@ export default function SignupForm() {
               value={form.phone}
               onChange={onChange}
               onBlur={onBlur}
-              className="w-full outline-none bg-transparent text-black text-base placeholder:text-[#81878B]"
+              className={`${baseInput} ${borderCls(phoneOk, touched.phone)}`}
             />
             {touched.phone && (
               <img
                 src={phoneOk ? CheckSmall : WarningSmall}
                 alt={phoneOk ? "valid" : "invalid"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5"
               />
             )}
           </div>
           {touched.phone && !phoneOk && (
-            <p className="text-xs text-red-500 mt-1">휴대폰번호를 정확히 입력해주세요.</p>
+            <p className="mt-1 text-[12px] text-[#FF5C5C]">휴대폰번호를 정확히 입력해주세요.</p>
           )}
         </div>
 
-        {/* ===== 이메일 ===== */}
+        {/* 이메일 */}
         <div className="mb-8">
-          <div
-            className={`relative flex items-center rounded-md border-[1.5px] bg-white h-11 w-full px-3 ${borderState(
-              emailOk,
-              touched.email
-            )}`}
-          >
+          <label className={labelCls}>이메일</label>
+          <div className="relative">
             <input
               name="email"
               inputMode="email"
@@ -280,28 +245,23 @@ export default function SignupForm() {
               value={form.email}
               onChange={onChange}
               onBlur={onBlur}
-              className="w-full outline-none bg-transparent text-black text-base placeholder:text-[#81878B]"
+              className={`${baseInput} ${borderCls(emailOk, touched.email)}`}
             />
             {touched.email && (
               <img
                 src={emailOk ? CheckSmall : WarningSmall}
                 alt={emailOk ? "valid" : "invalid"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5"
               />
             )}
           </div>
           {touched.email && !emailOk && (
-            <p className="text-xs text-red-500 mt-1">잘못된 이메일 형식입니다.</p>
+            <p className="mt-1 text-[12px] text-[#FF5C5C]">잘못된 이메일 형식입니다.</p>
           )}
         </div>
 
-        {/* 완료 버튼 (공용 버튼 사용) */}
-        <Button
-          variant="step"
-          isActive={allOk}
-          isFinal={true}
-          disabled={!allOk}
-        >
+        {/* 완료 버튼 */}
+        <Button variant="step" isActive={allOk} isFinal disabled={!allOk}>
           완료
         </Button>
       </form>
