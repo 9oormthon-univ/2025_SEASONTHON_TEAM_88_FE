@@ -7,10 +7,18 @@ import MainLayout from '../layout/MainLayout';
 import Icon from '../components/ui/Icon';
 import Button from '../components/ui/Button';
 import PartyCardClose from '../components/domain/PartyCardClose';
+import Select from '../components/ui/Select';
+import Header from '../layout/Header';
+import MainLayout from '../layout/MainLayout';
+import Icon from '../components/ui/Icon';
+import Button from '../components/ui/Button';
+import PartyCardClose from '../components/domain/PartyCardClose';
+import ConfirmModal from '../components/ui/ConfirmModal'; // ✅ 삭제 확인 모달
 
 const Test = () => {
   const [selectedValue, setSelectedValue] = useState('');
   const [isInParty, setIsInParty] = useState(true);
+  const [openDelete, setOpenDelete] = useState(false); // ✅ 모달 상태
 
   const fruitOptions = [
     { value: 'apple', label: '사과' },
@@ -68,6 +76,7 @@ const Test = () => {
           <p className="text-lg font-bold text-purple-400">{selectedValue || '아직 선택되지 않았습니다.'}</p>
         </div>
 
+        {/* ✅ 접힘 카드: 내부의 '파티 삭제' 클릭 시 모달 오픈 */}
         <PartyCardClose
           title="브라이덜 샤워"
           tasks={sampleTasks}
@@ -96,6 +105,22 @@ const Test = () => {
           </Button>
         </div>
       </div>
+
+      {/* ✅ 파티 삭제 확인 모달 */}
+      <ConfirmModal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        onCancel={() => setOpenDelete(false)}
+        onConfirm={() => {
+          // TODO: 실제 삭제 로직 연결
+          console.log('파티 삭제 확정');
+          setOpenDelete(false);
+        }}
+        title="파티를 삭제하시겠습니까?"
+        description="삭제 후에는 복구할 수 없습니다."
+        confirmText="삭제"
+        cancelText="취소"
+      />
     </MainLayout>
   );
 };

@@ -1,3 +1,4 @@
+// src/components/ui/Icon.jsx
 import React from 'react';
 
 // SVG 파일을 Vite의 내장 '?react' 접미사를 사용해 React 컴포넌트로 가져옵니다.
@@ -20,14 +21,14 @@ import { ReactComponent as LikeIcon } from '../../assets/icons/like.svg?react';
 import { ReactComponent as AroundIcon } from '../../assets/icons/around.svg?react';
 import { ReactComponent as HomeNavIcon } from '../../assets/icons/home-nav.svg?react';
 import { ReactComponent as RibbonBox } from '../../assets/icons/giftbox-ribbon.svg?react';
-import { ReactComponent as CheckRoundGrayIcon } from '../../assets/icons/check-round(gray).svg?react';
 import { ReactComponent as BlankCheck } from '../../assets/icons/blank-check.svg?react';
 import { ReactComponent as FilledCheck } from '../../assets/icons/filled-check.svg?react';
+
 /**
  * SVG 아이콘을 일관된 방식으로 보여주기 위한 컴포넌트입니다.
  * 이름을 props로 받아 해당하는 아이콘을 렌더링합니다.
  * @param {object} props
- * @param {'search' | 'cart' | 'heart-filled' | 'heart-outline' | 'bell' | 'arrow-left'} props.name - 표시할 아이콘의 이름입니다.
+ * @param {'search' | 'cart' | 'heart-filled' | 'heart-outline' | 'bell' | 'arrow-left' | 'cross'} props.name - 표시할 아이콘의 이름입니다.
  * @param {number} [props.size=1.5] - 아이콘의 가로/세로 크기입니다. (rem 단위, 기본값 1.5rem = 24px)
  * @param {string} [props.color] - 아이콘의 색상입니다. (tailwind 클래스, 예: 'text-purple-600')
  * @param {string} [props.className] - 추가적인 Tailwind CSS 클래스를 적용할 때 사용합니다.
@@ -54,6 +55,8 @@ const Icon = ({ name, size = 1.5, color, className }) => {
     'giftbox-ribbon': RibbonBox,
     'blank-check': BlankCheck,
     'filled-check': FilledCheck,
+    'check-round-gray': CheckRoundGrayIcon,
+    cross: CrossIcon,
   };
 
   const IconComponent = iconMap[name];
@@ -62,10 +65,18 @@ const Icon = ({ name, size = 1.5, color, className }) => {
     console.warn(`Icon not found: ${name}`);
     return null;
   }
+
   // 하트 svg 크기 달라서 조정
   const style = name.startsWith('heart-filled') ? { transform: 'scale(1.3)' } : {};
 
-  return <IconComponent width={`${size}rem`} height={`${size}rem`} style={style} className={`${color} ${className}`} />;
+  return (
+    <IconComponent
+      width={`${size}rem`}
+      height={`${size}rem`}
+      style={style}
+      className={`${color || ''} ${className || ''}`}
+    />
+  );
 };
 
 export default Icon;
