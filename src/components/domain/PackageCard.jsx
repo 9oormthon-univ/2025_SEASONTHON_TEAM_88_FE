@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import Icon from '../ui/Icon';
 import Button from '../ui/Button';
-// --- Helper Sub-components ---
 
 /**
  * @param {object} props
@@ -19,6 +18,7 @@ export default function PackageCard({
   onSelect,
   selectedItems = [],
   onItemToggle = () => {},
+  onAddToCart, // '내 파티에 담기' 핸들러를 prop으로 받음
 }) {
   /**
    * 숫자를 '만', '천' 단위의 한글 문자열로 변환하는 함수
@@ -182,7 +182,7 @@ export default function PackageCard({
         <Button
           variant="primary"
           isActive={selectedItems.length > 0}
-          onClick={() => console.log('파티 담기')}
+          onClick={onAddToCart} // 부모로부터 받은 onAddToCart 함수 실행
           className="font-pretendard text-[0.875rem] font-medium mt-[1.63rem]"
         >
           내 파티에 담기

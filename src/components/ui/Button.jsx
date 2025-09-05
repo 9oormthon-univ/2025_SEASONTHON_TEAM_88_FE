@@ -21,11 +21,12 @@ const Button = ({
 
   switch (variant) {
     /** =========================
-     *  CTA (예: 완료)
-     *  - 피그마 스펙: w-full, h-12, rounded-2xl
+     *  CTA (예: 완료)
+     *  - 피그마 스펙: w-full, rounded-[1.625rem], py-2
      * ========================= */
     case 'cta': {
-      combinedClasses += ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
+      // 요청에 따라 w-full, py-2, rounded-[1.625rem] 스타일로 수정
+      combinedClasses += ' w-full py-2 rounded-[1.625rem] font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
       combinedClasses +=
         isActive && !disabled
           ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
@@ -34,9 +35,9 @@ const Button = ({
     }
 
     /** =========================
-     *  Step (다음/완료)
-     *  - 피그마 스펙: w-full, h-12, rounded-2xl
-     *  - 비활성: 연회색
+     *  Step (다음/완료)
+     *  - 피그마 스펙: w-full, h-12, rounded-2xl
+     *  - 비활성: 연회색
      * ========================= */
     case 'step': {
       combinedClasses += ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
@@ -50,7 +51,7 @@ const Button = ({
     }
 
     /** =========================
-     *  아이콘 버튼 (빠른 액션)
+     *  아이콘 버튼 (빠른 액션)
      * ========================= */
     case 'icon': {
       combinedClasses += ' w-full rounded-lg p-4 justify-between font-bold ';
@@ -61,7 +62,7 @@ const Button = ({
     }
 
     /** =========================
-     *  기본 Primary (토글/일반)
+     *  기본 Primary (토글/일반)
      * ========================= */
     case 'primary':
     default: {

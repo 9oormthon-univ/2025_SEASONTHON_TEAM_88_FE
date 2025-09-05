@@ -24,6 +24,12 @@ import PackageCard from '../../components/domain/PackageCard';
 import PartyCardClose from '../../components/domain/PartyCardClose';
 import MyPartyBg from '../../assets/images/for-my-party-bg.svg';
 import Coupon from '../../assets/images/coupon.svg';
+
+import ConfirmModal from '../../components/ui/ConfirmModal';
+import BottomSheet from '../../components/ui/BottomSheet';
+import PartyAddSheet from '../../components/domain/PartyAddSheet';
+import PartySelectSheet from '../../components/domain/PartySelectSheet';
+
 const SIMILAR_ITEMS = [
   { id: 1, title: '라브앤프로포즈 커플 우정반지 세트', price: 45000, img: prodCard },
   { id: 2, title: '플로리스트엣닷 프리미엄 생화 꽃다발', price: 32000, img: prodFlower },
@@ -46,7 +52,11 @@ const IDEA_GRID = [
   { id: 'arr', label: '플라워', img: ideaDiffuser },
   { id: 'choco', label: '초콜릿', img: ideaChoco },
 ];
-
+// 파티 정보
+const userParties = [
+  { id: 'p1', name: '프로포즈' },
+  { id: 'p2', name: '기본 폴더' },
+];
 const PACKAGES = [
   {
     id: 'pkg1',
@@ -89,10 +99,37 @@ export default function PartyRecommend() {
     pkg1: [1, 2, 3],
   });
   const [hasActiveParty, setHasActiveParty] = useState(true);
+  const [modalStep, setModalStep] = useState(null); // null, 'selectAction', 'addParty', 'selectParty'
   const handleNavigation = (path) => {
     console.log(`Navigating to ${path}`);
     nav(path);
   };
+
+  // ▼▼▼ 수정된 부분: 핸들러 함수들 ▼▼▼
+  const handleOpenAddToCartModal = () => {
+    setModalStep('selectAction');
+  };
+
+  const handleSelectNewParty = () => {
+    setModalStep('addParty');
+  };
+
+  const handleSelectExistingParty = () => {
+    setModalStep('selectParty');
+  };
+
+  const handleAddParty = (partyName) => {
+    console.log('새 파티 생성:', partyName);
+    // TODO: 실제 파티 생성 로직
+    setModalStep(null); // 모든 모달/시트 닫기
+  };
+
+  const handleSelectParty = (partyId) => {
+    console.log('기존 파티에 추가:', partyId);
+    // TODO: 실제 파티 추가 로직
+    setModalStep(null); // 모든 모달/시트 닫기
+  };
+  // ▲▲▲ 수정된 부분 ▲▲▲
 
   const handleItemToggle = (packageId, itemId) => {
     setSelectedItems((prev) => {
@@ -125,7 +162,7 @@ export default function PartyRecommend() {
           onClick={() => handleNavigation('/party/start')}
           className=" w-full h-10 rounded-xl bg-[#7F6BFF] text-white text-[0.875rem] font-pretendard font-medium active:opacity-90 flex items-center justify-center gap-2"
         >
-          <Icon name="party-nav" size={0.9375} />
+          <Icon name="party-nav" size={0.9375} className="font-pretendard" />
           맞춤 파티 시작하기
         </button>
       </div>
@@ -166,11 +203,35 @@ export default function PartyRecommend() {
                 data={pkg}
                 selectedItems={selectedItems[pkg.id] || []}
                 onItemToggle={(itemId) => handleItemToggle(pkg.id, itemId)}
+                onAddToCart={handleOpenAddToCartModal}
               />
             </div>
           ))}
         </div>
       </div>
+      {/* ▼▼▼ 수정된 부분: 모달/바텀시트 렌더링 ▼▼▼ */}
+      {/* 1. 파티 담기 선택 모달 */}
+      <ConfirmModal
+        open={modalStep === 'selectAction'}
+        onClose={() => setModalStep(null)}
+        title="내 파티 담기 선택"
+        description="홈파티 패키지를 추가할 파티를 선택해주세요."
+        confirmText="새 파티로 생성"
+        onConfirm={handleSelectNewParty}
+        cancelText="기존 파티에 추가"
+        onCancel={handleSelectExistingParty}
+      />
+
+      {/* 2. 새 파티 추가 바텀시트 */}
+      <BottomSheet open={modalStep === 'addParty'} onClose={() => setModalStep(null)}>
+        <PartyAddSheet onAddParty={handleAddParty} />
+      </BottomSheet>
+
+      {/* 3. 기존 파티 선택 바텀시트 */}
+      <BottomSheet open={modalStep === 'selectParty'} onClose={() => setModalStep(null)}>
+        <PartySelectSheet parties={userParties} onSelectParty={handleSelectParty} />
+      </BottomSheet>
+      {/* ▲▲▲ 수정된 부분 ▲▲▲ */}
     </main>
   );
 }
