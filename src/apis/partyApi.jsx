@@ -16,3 +16,8 @@ export const getPartyDetails = async (partyId) => {
   const response = await api.get(`/parties/${partyId}`);
   return response.data;
 };
+
+export const deleteParty = async (partyId) => {
+  const response = await api.delete(`/parties/${partyId}`);
+  return response.data;
+};
