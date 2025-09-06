@@ -1,4 +1,3 @@
-// src/components/domain/PartyCard.jsx
 import React, { useEffect, useMemo, useState } from 'react';
 import giftbox from '../../assets/icons/giftbox.svg';
 import { ReactComponent as CheckGray } from '../../assets/icons/check-round(gray).svg?react';
@@ -7,65 +6,54 @@ import ConfirmModal from '../ui/ConfirmModal';
 import { createTodo, updateTodoStatus } from '../../apis/todoApi';
 
 export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete, onProgressChange }) {
-  // ✨ 1. items: 화면에 표시될 텍스트(string) 배열
-  const [items, setItems] = useState([]);
-  // ✨ 2. checked: 각 항목의 체크 여부를 관리하는 객체
-  const [checked, setChecked] = useState({});
+  // ✨ 1. 상태 관리를 internalTasks로 통일합니다.
+  const [internalTasks, setInternalTasks] = useState([]);
 
   const [adding, setAdding] = useState(false);
   const [newText, setNewText] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  // ✨ 3. tasks prop(객체 배열)이 변경될 때마다 UI 상태를 재설정하는 useEffect
+  // 부모로부터 받은 tasks prop(API 응답)을 내부 상태에 맞게 매핑합니다.
   useEffect(() => {
-    if (tasks && tasks.length > 0) {
-      // API 응답 객체에서 화면에 표시할 텍스트(task 또는 productName)만 추출
-      const mappedItems = tasks.map((task) => task.task || task.productName).filter(Boolean);
-      setItems(mappedItems);
+    const mappedTasks = tasks
+      .map((task) => ({
+        id: task.todoId,
+        text: task.task || task.productName,
+        isCompleted: task.isCompleted,
+      }))
+      .filter((item) => item.id && item.text);
 
-      // API 응답 객체의 isCompleted 값을 기반으로 초기 체크 상태를 설정
-      const initialChecked = tasks.reduce((acc, task, index) => {
-        acc[index] = task.isCompleted;
-        return acc;
-      }, {});
-      setChecked(initialChecked);
-    }
-  }, [tasks]); // tasks 배열이 바뀔 때마다 이 효과를 다시 실행
+    setInternalTasks(mappedTasks);
+  }, [tasks]);
 
-  // 진행률
-  const total = items.length;
-  const checkedCount = useMemo(() => items.reduce((acc, _, i) => acc + (checked[i] ? 1 : 0), 0), [items, checked]);
+  // ✨ 2. 진행률 계산 로직을 internalTasks 기준으로 수정합니다.
+  const total = internalTasks.length;
+  const checkedCount = useMemo(() => internalTasks.filter((task) => task.isCompleted).length, [internalTasks]);
   const ratio = total > 0 ? checkedCount / total : 0;
   const done = ratio >= 1;
-
-  /** ── 바/선물 스펙 (Close와 동일) ───────────────────────── */
-  const BAR_TOTAL_REM = 18.5;
-  const BAR_H_REM = 0.625;
-  const BAR_R_REM = 1.0625;
-
-  const GIFT_W_BASE = 2.46569;
-  const GIFT_H_BASE = 2.46563;
-  const GIFT_SCALE = 1.44;
-  const GIFT_W = GIFT_W_BASE * GIFT_SCALE;
-  const GIFT_H = GIFT_H_BASE * GIFT_SCALE;
-
-  const clamped = Math.max(0, Math.min(1, ratio));
-  const filledRem = clamped * BAR_TOTAL_REM;
-
-  // 🎁 선물박스 위치: 0%=왼쪽, 100%=오른쪽, 그 외=채워진 끝(중앙 기준)
-  const giftLeft = useMemo(() => {
-    if (clamped === 0) return -GIFT_W / 4; // 시작부 살짝 앞으로
-    if (clamped === 1) return BAR_TOTAL_REM - GIFT_W / 2; // 끝에서 중앙 정렬
-    return filledRem - GIFT_W / 2; // 진행 끝의 중앙
-  }, [clamped, filledRem]);
-
-  const filledWidth = Math.min(filledRem, BAR_TOTAL_REM);
 
   useEffect(() => {
     onProgressChange?.(ratio);
   }, [ratio, onProgressChange]);
 
-  const toggleCheck = (idx) => setChecked((prev) => ({ ...prev, [idx]: !prev[idx] }));
+  const toggleCheck = async (todoId) => {
+    const taskIndex = internalTasks.findIndex((t) => t.id === todoId);
+    if (taskIndex === -1) return;
+
+    const taskToUpdate = internalTasks[taskIndex];
+    const newCompletedState = !taskToUpdate.isCompleted;
+
+    const updatedTasks = internalTasks.map((t) => (t.id === todoId ? { ...t, isCompleted: newCompletedState } : t));
+    setInternalTasks(updatedTasks);
+
+    try {
+      await updateTodoStatus(todoId, newCompletedState);
+    } catch (error) {
+      console.error('상태 업데이트 실패. UI를 롤백합니다.');
+      const revertedTasks = internalTasks.map((t) => (t.id === todoId ? { ...t, isCompleted: !newCompletedState } : t));
+      setInternalTasks(revertedTasks);
+    }
+  };
 
   const startAdding = () => !adding && setAdding(true);
   const cancelAdding = () => {
@@ -73,79 +61,81 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
     setNewText('');
   };
 
-  // ✨ 3. '리스트 추가하기' API 호출 로직
   const commitAdd = async () => {
     const t = newText.trim();
-    if (!t || !partyId) return; // partyId가 없으면 실행하지 않음
+    if (!t || !partyId) return;
 
     try {
-      // API 호출
       const response = await createTodo({ partyId: partyId, task: t });
-
-      if (response.isSuccess) {
-        // API 호출 성공 시 UI 업데이트
-        setItems((prev) => [...prev, t]);
+      if (response.isSuccess && response.result) {
+        const newTodo = response.result;
+        // ✨ 3. 새 할 일을 추가할 때도 internalTasks 상태를 업데이트합니다.
+        setInternalTasks((prev) => [
+          ...prev,
+          {
+            id: newTodo.todoId,
+            text: newTodo.task,
+            isCompleted: newTodo.isCompleted,
+          },
+        ]);
         setNewText('');
         setAdding(false);
-        onAdd?.(t); // (선택) 부모 컴포넌트에 알림
+        onAdd?.(t);
       } else {
-        // (선택) API 에러 처리 (예: 사용자에게 알림)
         console.error('Todo 추가 실패:', response.message);
       }
     } catch (error) {
-      {
-        console.error('Todo 추가 API 호출 중 에러 발생:', error);
-      }
+      console.error('Todo 추가 API 호출 중 에러 발생:', error);
     }
   };
+
   const buttonDisabled = adding ? newText.trim().length === 0 : false;
+
+  // (나머지 UI 및 스타일 코드는 동일)
+  const BAR_TOTAL_REM = 18.5;
+  const BAR_H_REM = 0.625;
+  const BAR_R_REM = 1.0625;
+  const GIFT_W_BASE = 2.46569;
+  const GIFT_H_BASE = 2.46563;
+  const GIFT_SCALE = 1.44;
+  const GIFT_W = GIFT_W_BASE * GIFT_SCALE;
+  const GIFT_H = GIFT_H_BASE * GIFT_SCALE;
+  const clamped = Math.max(0, Math.min(1, ratio));
+  const filledRem = clamped * BAR_TOTAL_REM;
+  const giftLeft = useMemo(() => {
+    if (clamped === 0) return -GIFT_W / 4;
+    if (clamped === 1) return BAR_TOTAL_REM - GIFT_W / 2;
+    return filledRem - GIFT_W / 2;
+  }, [clamped, filledRem]);
+  const filledWidth = Math.min(filledRem, BAR_TOTAL_REM);
 
   return (
     <>
       <section className="w-full rounded-[1.25rem] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.06)]">
-        {/* 헤더 */}
         <header className="flex items-center justify-between">
           <h3 className="font-pretendard text-[1.125rem] font-semibold leading-[1.575rem] text-[#191A1C]">{title}</h3>
         </header>
 
-        {/* 진행 바 */}
         <div className="mt-3">
-          {/* 라벨 라인: 왼쪽 '준비 완료'(완료시에만), 오른쪽 '준비 시작/준비 중' */}
           <div className="relative h-4">
-            {done ? (
+            {done && (
               <span className="absolute left-0 font-pretendard text-[0.625rem] font-semibold leading-[1rem] text-[#8371FD]">
                 준비 완료
               </span>
-            ) : (
-              // 자리 유지용 투명 텍스트 (레이아웃 안정)
-              <span className="absolute left-0 opacity-0 select-none">.</span>
             )}
             <span className="absolute right-0 font-pretendard text-[0.625rem] font-semibold leading-[1rem] text-[#464B51]">
               {clamped === 0 ? '준비 시작' : done ? '' : '준비 중'}
             </span>
           </div>
-
-          {/* 바 + 선물박스 */}
           <div className="relative mt-1" style={{ width: `${BAR_TOTAL_REM}rem` }}>
-            {/* 배경 바 */}
             <div
               className="bg-[#EBEBEB]"
-              style={{
-                width: `${BAR_TOTAL_REM}rem`,
-                height: `${BAR_H_REM}rem`,
-                borderRadius: `${BAR_R_REM}rem`,
-              }}
+              style={{ width: `${BAR_TOTAL_REM}rem`, height: `${BAR_H_REM}rem`, borderRadius: `${BAR_R_REM}rem` }}
             />
-            {/* 채워진 바 */}
             <div
               className="absolute left-0 top-0 bg-[#8371FD] transition-[width] duration-300"
-              style={{
-                width: `${filledWidth}rem`,
-                height: `${BAR_H_REM}rem`,
-                borderRadius: `${BAR_R_REM}rem`,
-              }}
+              style={{ width: `${filledWidth}rem`, height: `${BAR_H_REM}rem`, borderRadius: `${BAR_R_REM}rem` }}
             />
-            {/* 선물박스 */}
             <img
               src={giftbox}
               alt="gift"
@@ -160,51 +150,45 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
           </div>
         </div>
 
-        {/* 준비 리스트 + 배지 */}
         <div className="flex items-center justify-between mt-5">
           <h4 className="font-pretendard text-[1.125rem] font-semibold leading-[1.575rem] text-[#191A1C]">
             준비 리스트
           </h4>
-          {done ? (
-            <span className="inline-flex w-[3.375rem] h-[1.4375rem] items-center justify-center rounded-[2rem] bg-[#8371FD]">
-              <span className="font-pretendard text-[0.75rem] font-medium leading-[1.2rem] text-white">완료</span>
+          <span
+            className={`inline-flex w-[3.375rem] h-[1.4375rem] items-center justify-center rounded-[2rem] ${
+              done ? 'bg-[#8371FD]' : 'bg-[#EFE8FF]'
+            }`}
+          >
+            <span
+              className={`font-pretendard text-[0.75rem] font-medium leading-[1.2rem] ${
+                done ? 'text-white' : 'text-[#44388C]'
+              }`}
+            >
+              {done ? '완료' : '진행중'}
             </span>
-          ) : (
-            <span className="inline-flex w-[3.375rem] h-[1.4375rem] items-center justify-center rounded-[2rem] bg-[#EFE8FF]">
-              <span className="font-pretendard text-[0.75rem] font-medium leading-[1.2rem] text-[#44388C]">진행중</span>
-            </span>
-          )}
+          </span>
         </div>
 
-        {/* 리스트 */}
+        {/* ✨ 4. 렌더링 로직을 internalTasks 기준으로 수정합니다. */}
         <ul className="mt-3 space-y-2">
-          {items.map((text, idx) => {
-            const isChecked = !!checked[idx];
+          {internalTasks.map((task) => {
             return (
               <li
-                key={`${text}-${idx}`}
+                key={task.id}
                 className="flex items-center justify-between rounded-[0.5rem] bg-[#F8F8F8] px-4 py-[0.625rem]"
-                onClick={() => toggleCheck(idx)}
+                onClick={() => toggleCheck(task.id)}
               >
                 <span className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem] text-[#191A1C]">
-                  {text}
+                  {task.text}
                 </span>
-                {isChecked ? (
-                  <CheckPurple
-                    className="w-[1.25rem] h-[1.25rem] shrink-0"
-                    style={{ strokeWidth: 1, stroke: '#8371FD' }}
-                  />
+                {task.isCompleted ? (
+                  <CheckPurple className="w-[1.25rem] h-[1.25rem] shrink-0" />
                 ) : (
-                  <CheckGray
-                    className="w-[1.25rem] h-[1.25rem] shrink-0"
-                    style={{ strokeWidth: 1, stroke: '#464B51' }}
-                  />
+                  <CheckGray className="w-[1.25rem] h-[1.25rem] shrink-0" />
                 )}
               </li>
             );
           })}
-
-          {/* 입력 행 */}
           {adding && (
             <li className="flex items-center justify-between rounded-[0.5rem] bg-[#F8F8F8] px-4 py-[0.625rem]">
               <button
@@ -226,15 +210,11 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
                 className="flex-1 bg-transparent outline-none text-[#191A1C] placeholder:text-[#9AA0A6] font-pretendard text-[0.875rem]"
                 onClick={(e) => e.stopPropagation()}
               />
-              <CheckGray
-                className="ml-2 w-[1.25rem] h-[1.25rem] shrink-0"
-                style={{ strokeWidth: 1.5, stroke: '#464B51' }}
-              />
+              <CheckGray className="ml-2 w-[1.25rem] h-[1.25rem] shrink-0" />
             </li>
           )}
         </ul>
 
-        {/* 리스트 추가 버튼 */}
         <button
           type="button"
           disabled={buttonDisabled}
@@ -249,8 +229,6 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
         >
           <span className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem]">리스트 추가하기</span>
         </button>
-
-        {/* 파티 삭제 */}
         <div className="mt-2 text-right">
           <button
             type="button"
@@ -262,7 +240,6 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
         </div>
       </section>
 
-      {/* Confirm Modal */}
       <ConfirmModal
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}

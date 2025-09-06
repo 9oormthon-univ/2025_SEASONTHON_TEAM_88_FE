@@ -73,6 +73,7 @@ const PACKAGES = [
 ];
 
 export default function PartyRecommend() {
+  const nav = useNavigate();
   // ✨ API로부터 받아온 파티 목록을 저장할 state
   const [myParties, setMyParties] = useState([]);
   const [selectedItems, setSelectedItems] = useState({ pkg2: [1, 2, 3] });
