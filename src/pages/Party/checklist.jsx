@@ -1,6 +1,13 @@
+// src/pages/Party/checklist.jsx
+import React, { useState } from 'react';
+
+/* ✅ 도메인 컴포넌트 */
 import PackageCard from '../../components/domain/PackageCard';
 
-const PURPOSE_OPTIONS = [
+/* ------------------------------ */
+/* DATA SET (실사용 옵션들) */
+/* ------------------------------ */
+export const PURPOSE_OPTIONS = [
   '생일',
   '기념일',
   '프로포즈',
@@ -11,7 +18,8 @@ const PURPOSE_OPTIONS = [
   '젠더리빌',
   '기타',
 ];
-const BUDGET_OPTIONS = [
+
+export const BUDGET_OPTIONS = [
   '1만원미만',
   '1~2만원대',
   '3~4만원대',
@@ -21,60 +29,58 @@ const BUDGET_OPTIONS = [
   '10만원 이상',
   '기타',
 ];
-const WHO_OPTIONS = ['나를 위해', '연인', '가족', '친구', '동료/지인', '기타'];
+
+export const WHO_OPTIONS = ['나를 위해', '연인', '가족', '친구', '동료/지인', '기타'];
+
 const BUY_GROUPS = [
   { title: '식품', items: ['케이크', '쿠키', '음료', '베이커리', '떡', '전통간식', '초콜릿', '사탕', '건강식품'] },
   { title: '소품', items: ['풍선', '가랜드', '현수막', '캔들', '꽃/화분', '테이블웨어', '조명', '장식', '키트'] },
   { title: '주얼리', items: ['반지', '팔찌', '귀걸이', '목걸이', '발찌', '헤어 악세사리', '커플세트', '시계'] },
   { title: '문구', items: ['카드', '편지지', '포장', '휴대폰 케이스', '그립톡', '스티커', '키링'] },
 ];
-function Checklist({
-  step,
-  purpose,
-  setPurpose,
-  budget,
-  setBudget,
-  who,
-  setWho,
-  items,
-  toggleItem,
-  specialMode,
-  setSpecialMode,
-  specialText,
-  setSpecialText,
-  selectedPkgId,
-  setSelectedPkgId,
-  packageName,
-  setPackageName,
-  packages = [],
-}) {
-  const h2Class = 'font-pretendard text-[1.25rem] font-bold leading-tight text-[#191A1C]';
 
-  const Chip = ({ active, children, onClick }) => (
+/* ------------------------------ */
+/* UI PRIMITIVES */
+/* ------------------------------ */
+const h2Class = 'font-pretendard text-[1.25rem] font-[600] leading-[1.75rem] text-[#191A1C]';
+
+function Chip({ active, children, onClick, className = '' }) {
+  return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center justify-center px-5 py-2.5 rounded-full transition-colors ${
-        active ? 'bg-[#7F6BFF] text-white' : 'bg-[#F5F5F5] text-[#646B72] hover:bg-[#EFEFEF]'
-      }`}
+      className={[
+        'inline-flex items-center justify-center',
+        'px-[1.25rem] py-[0.5625rem] rounded-[1.25rem]',
+        active ? 'bg-[#7F6BFF] text-white' : 'bg-[#F5F5F5] text-[#646B72] hover:bg-[#EFEFEF]',
+        'transition-colors',
+        className,
+      ].join(' ')}
     >
-      <span className="text-sm font-medium font-pretendard">{children}</span>
+      <span className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem]">{children}</span>
     </button>
   );
+}
 
-  const CheckChip = ({ checked, children, onClick }) => (
+function CheckChip({ checked, children, onClick }) {
+  return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center justify-center px-3 py-1.5 rounded-full border transition-colors ${
-        checked ? 'bg-[#7F6BFF] text-white border-[#7F6BFF]' : 'bg-white text-[#81878B] border-[#B1B7BC]'
-      }`}
+      className={[
+        'inline-flex items-center justify-center',
+        'px-[12px] py-[5px] rounded-[100px] border',
+        checked ? 'bg-[#7F6BFF] text-white border-[#7F6BFF]' : 'bg-white text-[#81878B] border-[#B1B7BC]',
+        'transition-colors',
+      ].join(' ')}
     >
-      <span className="text-xs font-medium font-pretendard">{children}</span>
+      <span className="font-pretendard text-[12px] font-medium leading-[19px]">{children}</span>
     </button>
   );
+}
 
-  const ChipCheckGroup = ({ options, selected, onToggle }) => (
+function ChipCheckGroup({ options, selected, onToggle }) {
+  return (
     <div className="flex flex-wrap gap-2">
       {options.map((opt) => (
         <CheckChip key={opt} checked={selected.includes(opt)} onClick={() => onToggle(opt)}>
@@ -83,14 +89,51 @@ function Checklist({
       ))}
     </div>
   );
+}
 
-  const Section = ({ title, subtitle, children }) => (
-    <section className="px-6">
-      <h2 className={h2Class}>{title}</h2>
-      {subtitle && <p className="mt-1 text-xs text-[#8B90A0]">{subtitle}</p>}
-      <div className="mt-4">{children}</div>
-    </section>
-  );
+/* ------------------------------ */
+/* SECTION WRAP */
+/* ------------------------------ */
+const Section = ({ title, subtitle, children }) => (
+  <section className="px-6">
+    <h2 className={h2Class}>{title}</h2>
+    {subtitle && <p className="mt-1 text-[12px] text-[#8B90A0]">{subtitle}</p>}
+    <div className="mt-4">{children}</div>
+  </section>
+);
+
+/* ------------------------------ */
+/* MAIN SWITCH (콘텐츠만 렌더) */
+/* ------------------------------ */
+/** ⛔️ 진행바/퍼센트/버튼은 PartyStart.jsx에서만 관리 */
+export default function Checklist({
+  step,
+  // step 0~3
+  purpose,
+  setPurpose,
+  budget,
+  setBudget,
+  who,
+  setWho,
+  items,
+  toggleItem,
+  // step 4
+  specialMode,
+  setSpecialMode,
+  specialText: specialTextProp,
+  setSpecialText: setSpecialTextProp,
+  // step 5
+  selectedPkgId,
+  setSelectedPkgId,
+  // step 6
+  packageName,
+  setPackageName,
+  packages = [], // ✅ 더미 제거: 기본값 빈 배열
+}) {
+  // 직접입력 내부 기본값 보정(상위에서 안 내려줬을 때)
+  const [internalSpecialText, setInternalSpecialText] = useState('');
+  const specialText = specialTextProp ?? internalSpecialText;
+  const setSpecialText = setSpecialTextProp ?? setInternalSpecialText;
 
   switch (step) {
     case 0:
@@ -105,6 +148,7 @@ function Checklist({
           </div>
         </Section>
       );
+
     case 1:
       return (
         <Section title="예산 범위를 선택해주세요">
@@ -117,6 +161,7 @@ function Checklist({
           </div>
         </Section>
       );
+
     case 2:
       return (
         <Section title="누구와 함께할 파티인가요?">
@@ -129,19 +174,21 @@ function Checklist({
           </div>
         </Section>
       );
+
     case 3:
       return (
         <Section title="구매 항목을 선택해주세요" subtitle="(1개 이상 선택 가능)">
           <div className="space-y-6">
             {BUY_GROUPS.map((g) => (
               <div key={g.title}>
-                <div className="mb-2 text-sm font-semibold text-[#353A40]">{g.title}</div>
+                <div className="mb-2 font-pretendard text-[0.875rem] font-[600] text-[#353A40]">{g.title}</div>
                 <ChipCheckGroup options={g.items} selected={items} onToggle={toggleItem} />
               </div>
             ))}
           </div>
         </Section>
       );
+
     case 4:
       return (
         <Section title="특별히 준비해드릴 게 있을까요?" subtitle="(파티 콘셉트, 테마, 색감 등)">
@@ -149,26 +196,32 @@ function Checklist({
             <Chip active={specialMode === '없음'} onClick={() => setSpecialMode('없음')}>
               없음
             </Chip>
-            {specialMode !== '직접입력' ? (
-              <Chip active={false} onClick={() => setSpecialMode('직접입력')}>
-                직접입력
-              </Chip>
-            ) : (
-              <div className="w-full max-w-sm mt-3 rounded-2xl bg-[#8371FD] p-5">
-                <p className="text-sm font-medium text-white">직접입력</p>
-                <div className="mt-2">
-                  <textarea
-                    value={specialText}
-                    onChange={(e) => setSpecialText(e.target.value)}
-                    placeholder="입력하기"
-                    className="w-full h-28 p-3 text-xs rounded-lg resize-none outline-none placeholder:text-[#B1B7BC] text-[#464B51]"
-                  />
+
+            <div className="w-full">
+              {specialMode !== '직접입력' ? (
+                <Chip active={false} onClick={() => setSpecialMode('직접입력')}>
+                  직접입력
+                </Chip>
+              ) : (
+                <div className="mt-3 w-[19.875rem] rounded-[1.3125rem] bg-[#8371FD] px-5 pt-4 pb-5 flex flex-col">
+                  <p className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem] text-white">직접입력</p>
+                  <div className="flex justify-center mt-1">
+                    <textarea
+                      value={specialText}
+                      onChange={(e) => setSpecialText(e.target.value)}
+                      placeholder="입력하기"
+                      className="w-[17.625rem] h-[6.9375rem] rounded-[0.75rem] bg-white p-3 px-4 resize-none outline-none
+                                 font-pretendard text-[0.75rem] font-medium leading-[1.2rem]
+                                 placeholder:text-[#B1B7BC] text-[#464B51]"
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </Section>
       );
+
     case 5:
       return (
         <Section
@@ -190,9 +243,13 @@ function Checklist({
                 onSelect={() => setSelectedPkgId(pkg.id)}
               />
             ))}
+            {packages.length === 0 && (
+              <p className="text-sm text-[#8B90A0]">추천 패키지를 불러오는 중이거나 아직 없습니다.</p>
+            )}
           </div>
         </Section>
       );
+
     case 6:
       return (
         <Section title="패키지 명을 입력해주세요">
@@ -202,30 +259,29 @@ function Checklist({
                 value={packageName}
                 onChange={(e) => setPackageName(e.target.value.slice(0, 60))}
                 placeholder="패키지 명"
-                className="w-full py-2 bg-transparent border-b-2 border-[#BBAFFB] focus:border-[#7F6BFF] outline-none"
+                className="w-full border-b-2 border-[#BBAFFB] focus:border-[#7F6BFF] outline-none py-2 text-[16px] bg-transparent"
               />
               {packageName && (
                 <button
                   type="button"
                   onClick={() => setPackageName('')}
-                  className="absolute inset-y-0 right-0 flex items-center pr-2"
+                  className="absolute flex items-center justify-center -translate-y-1/2 right-1 top-1/2"
                   aria-label="clear"
                 >
-                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[#D9D9D9]">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <div className="flex items-center justify-center w-[1.1875rem] h-[1.1875rem] rounded-full bg-[#D9D9D9]">
+                    <svg width="0.6875rem" height="0.6875rem" viewBox="0 0 24 24" fill="none">
                       <path d="M6 6L18 18M18 6L6 18" stroke="white" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                   </div>
                 </button>
               )}
             </div>
-            <div className="mt-1 text-xs text-right text-[#8B8F95]">{packageName.length}/60</div>
+            <div className="mt-1 text-[12px] text-[#8B8F95]">{packageName.length}/60</div>
           </div>
         </Section>
       );
+
     default:
       return null;
   }
 }
-
-export default Checklist;

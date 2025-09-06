@@ -4,6 +4,7 @@ import giftbox from '../../assets/icons/giftbox.svg';
 import chevron from '../../assets/icons/chevron-left.svg';
 
 export default function PartyCardClose({
+  partyId,
   title,
   tasks = [],
   progress = 0, // 0 ~ 1
@@ -121,7 +122,14 @@ export default function PartyCardClose({
   /** ---- Open (확장) ---- */
   return (
     <section className="relative w-[20.5rem]">
-      <PartyCard title={title} tasks={tasks} onAdd={onAdd} onDelete={onDelete} onProgressChange={setRatio} />
+      <PartyCard
+        partyId={partyId}
+        title={title}
+        tasks={tasks}
+        onAdd={onAdd}
+        onDelete={onDelete}
+        onProgressChange={setRatio}
+      />
       <button
         type="button"
         aria-label="접기"
