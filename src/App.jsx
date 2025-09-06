@@ -16,7 +16,7 @@ import PartyStart from './pages/Party/PartyStart';
 import WishlistPage from './pages/WishlistPage';
 import MyPage from './pages/MyPage';
 import Test from './pages/Test';
-
+import Redirection from './pages/intro/Redirection.jsx';
 const queryClient = new QueryClient();
 
 export default function App() {
@@ -41,6 +41,7 @@ export default function App() {
           <Route path="/products/:parentCategory/:subCategory" element={<ProductListPage />} />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
           <Route path="/filter" element={<FilterPage />} />
+          <Route path="/auth/kakao/callback" element={<Redirection />}></Route>
           {/* 없는 경로는 스플래쉬로 리다이렉트 */}
 
           {/* 없는 경로 → 스플래시 */}

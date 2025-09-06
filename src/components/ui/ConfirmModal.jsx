@@ -1,19 +1,16 @@
 // src/components/ui/ConfirmModal.jsx
 import React, { useEffect } from 'react';
-import Icon from './Icon'; // x 아이콘은 name="cross" 로 사용
 
 export default function ConfirmModal({
   open,
+  title = '텍스트',
+  description = '상세텍스트',
+  leftText = '확인',
+  rightText = '취소',
+  onLeft,
+  onRight,
   onClose,
-  onConfirm,
-  onCancel,
-  title = '확인',
-  description = '',
-  confirmText = '삭제',
-  cancelText = '취소',
-  showClose = true,
 }) {
-  // ESC 키로 닫기
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => e.key === 'Escape' && onClose?.();
@@ -25,68 +22,84 @@ export default function ConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-      onMouseDown={onClose}
-      aria-modal="true"
       role="dialog"
+      aria-modal="true"
+      onMouseDown={onClose}
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-[2px]"
     >
-      {/* 모달 카드 */}
+      {/* 카드 */}
       <div
-        className="relative w-[20.375rem] rounded-[1.25rem] bg-white shadow-lg"
-        style={{ minHeight: '10.625rem' }}
-        onMouseDown={(e) => e.stopPropagation()} // 카드 내부 클릭은 전파 방지
+        onMouseDown={(e) => e.stopPropagation()}
+        className="relative flex h-[10.625rem] w-[20.375rem] shrink-0 flex-col items-center
+                   justify-center gap-[0.875rem] rounded-[1.3125rem] bg-white
+                   shadow-[0_16px_28px_rgba(0,0,0,0.12)] ring-1 ring-black/5"
       >
-        {/* X 버튼 */}
-        {showClose && (
-          <button
-            type="button"
-            aria-label="닫기"
-            onClick={onClose}
-            className="absolute grid right-4 top-4 place-items-center"
-          >
-            {/* 아이콘 사이즈 지정: 0.9375rem */}
-            <Icon name="cross" size={0.9375} />
-          </button>
-        )}
+        {/* X 아이콘 */}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="닫기"
+          className="absolute right-[0.75rem] top-[0.75rem] grid h-7 w-7 place-items-center
+                     rounded-full hover:bg-black/5 active:bg-black/10"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M6 18L18 6M6 6L18 18"
+              stroke="#B3BBC2"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
 
-        {/* 본문 */}
-        <div className="px-6 pt-10 pb-6">
-          {/* 제목 */}
-          <h2 className="text-center font-pretendard text-[1.125rem] font-semibold leading-[1.575rem] text-[#191A1C]">
+        {/* 제목 + 설명 */}
+        <div className="flex flex-col items-center mt-4">
+          <h2
+            className="max-w-[16.5rem] text-center text-[#191A1C]
+                         font-pretendard text-[1.125rem] font-semibold leading-[1.575rem]
+                         tracking-[-0.01em]"
+          >
             {title}
           </h2>
+          <p
+            className="mt-1 max-w-[16.5rem] text-center text-[#646B72]
+                        font-pretendard text-[0.75rem] font-medium leading-[1.2rem]
+                        tracking-[-0.005em]"
+          >
+            {description}
+          </p>
+        </div>
 
-          {/* 설명 */}
-          {description && (
-            <p className="mt-3 text-center font-pretendard text-[0.75rem] font-medium leading-[1.2rem] text-[#646B72]">
-              {description}
-            </p>
-          )}
-
-          {/* 버튼 영역 */}
-          <div className="flex items-center justify-center gap-4 mt-6">
-            {/* 삭제(확인) 버튼 - 보라 톤 */}
-            <button
-              type="button"
-              onClick={onConfirm}
-              className="flex w-[8rem] h-[3.0625rem] items-center justify-center rounded-[0.6875rem] bg-[#D4CEFE]"
+        {/* 버튼 (지금 위치 유지) */}
+        <div className="flex items-center justify-center gap-4 mt-3">
+          <button
+            type="button"
+            onClick={onLeft}
+            className="h-[3.0625rem] w-[8rem] rounded-[0.6875rem] bg-[#D4CEFE]
+                       ring-1 ring-black/5 hover:brightness-95 active:brightness-90"
+          >
+            <span
+              className="mx-auto block w-[7.375rem] text-center text-[#34296F]
+                             font-pretendard text-[0.875rem] font-medium leading-[1.4rem]"
             >
-              <span className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem] text-[#34296F]">
-                {confirmText}
-              </span>
-            </button>
+              {leftText}
+            </span>
+          </button>
 
-            {/* 취소 버튼 - 회색 톤 */}
-            <button
-              type="button"
-              onClick={onCancel ?? onClose}
-              className="flex w-[8rem] h-[3.0625rem] items-center justify-center rounded-[0.6875rem] bg-[#EBEBEB]"
+          <button
+            type="button"
+            onClick={onRight ?? onClose}
+            className="h-[3.0625rem] w-[8rem] rounded-[0.6875rem] bg-[#EBEBEB]
+                       ring-1 ring-black/5 hover:brightness-95 active:brightness-90"
+          >
+            <span
+              className="mx-auto block w-[7.375rem] text-center text-[#323639]
+                             font-pretendard text-[0.875rem] font-medium leading-[1.4rem]"
             >
-              <span className="font-pretendard text-[0.875rem] font-medium leading-[1.4rem] text-[#323639]">
-                {cancelText}
-              </span>
-            </button>
-          </div>
+              {rightText}
+            </span>
+          </button>
         </div>
       </div>
     </div>
