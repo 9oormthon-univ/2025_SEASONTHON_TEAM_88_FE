@@ -80,7 +80,7 @@ export default function PackageCard({
   const renderSimpleItemList = () => (
     <div className="flex w-full gap-3 mt-4">
       {data.items.map((it) => (
-        <div key={it.id} className="w-[100px]">
+        <div key={it.id} className="w-[5.25rem]">
           {/* 썸네일 + 카테고리 라벨(오버레이) */}
           <div className="relative w-full h-[90px] rounded-[10px] overflow-hidden bg-gray-200">
             <img src={it.img} alt={it.name} className="object-cover w-full h-full" />
