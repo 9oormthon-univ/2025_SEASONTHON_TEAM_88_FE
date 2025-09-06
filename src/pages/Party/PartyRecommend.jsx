@@ -1,5 +1,5 @@
 // src/pages/Party/PartyRecommend.jsx
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../components/ui/Icon';
 import imgEarring from '../../assets/images/card.svg';
@@ -29,29 +29,8 @@ import ConfirmModal from '../../components/ui/ConfirmModal';
 import BottomSheet from '../../components/ui/BottomSheet';
 import PartyAddSheet from '../../components/domain/PartyAddSheet';
 import PartySelectSheet from '../../components/domain/PartySelectSheet';
+import { getMyParties } from '../../apis/partyApi';
 
-const SIMILAR_ITEMS = [
-  { id: 1, title: '라브앤프로포즈 커플 우정반지 세트', price: 45000, img: prodCard },
-  { id: 2, title: '플로리스트엣닷 프리미엄 생화 꽃다발', price: 32000, img: prodFlower },
-  { id: 3, title: '파티메이커 홈파티 미니 키트', price: 32000, img: prodCandle },
-  { id: 4, title: '로맨틱 티타임 세트', price: 15000, img: prodTea },
-];
-
-const PACKAGE_ITEMS = [
-  { key: 'flower', label: '생화 꽃다발 구매하기', price: 10000, img: ideaBouquet },
-  { key: 'balloon', label: '하트 풍선 세트 구매하기', price: 10000, img: ideaCandle },
-  { key: 'couple', label: '커플링 구매하기', price: 10000, img: ideaCard },
-  { key: 'setup', label: '프로포즈 세팅하기', price: 10000, img: ideaDiffuser },
-];
-
-const IDEA_GRID = [
-  { id: 'bqt', label: '꽃다발', img: ideaBouquet },
-  { id: 'neck', label: '주얼리', img: ideaCard },
-  { id: 'sun', label: '꽃다발', img: ideaFlower },
-  { id: 'balloon', label: '풍선', img: ideaCandle },
-  { id: 'arr', label: '플라워', img: ideaDiffuser },
-  { id: 'choco', label: '초콜릿', img: ideaChoco },
-];
 // 파티 정보
 const userParties = [
   { id: 'p1', name: '프로포즈' },
@@ -94,16 +73,40 @@ const PACKAGES = [
 ];
 
 export default function PartyRecommend() {
-  const nav = useNavigate();
-  const [selectedItems, setSelectedItems] = useState({
-    pkg1: [1, 2, 3],
-  });
-  const [hasActiveParty, setHasActiveParty] = useState(true);
-  const [modalStep, setModalStep] = useState(null); // null, 'selectAction', 'addParty', 'selectParty'
-  const handleNavigation = (path) => {
-    console.log(`Navigating to ${path}`);
-    nav(path);
-  };
+  // ✨ API로부터 받아온 파티 목록을 저장할 state
+  const [myParties, setMyParties] = useState([]);
+  const [selectedItems, setSelectedItems] = useState({ pkg2: [1, 2, 3] });
+  const [modalStep, setModalStep] = useState(null);
+
+  // ✨ myParties 배열의 길이를 기반으로 파티 유무를 결정
+  const hasActiveParty = myParties.length > 0;
+
+  // ✨ 컴포넌트가 마운트될 때 파티 목록을 불러옵니다.
+  useEffect(() => {
+    const fetchMyParties = async () => {
+      try {
+        const res = await getMyParties();
+
+        // ✨ 수정된 부분: API 응답이 객체인지 확인하고 배열로 감싸서 state에 저장
+        if (res.isSuccess && res.result && typeof res.result === 'object' && !Array.isArray(res.result)) {
+          // 단일 객체로 응답이 오면 배열에 담아줍니다.
+          setMyParties([res.result]);
+        } else if (res.isSuccess && Array.isArray(res.result)) {
+          // 혹시 배열로 올 경우도 대비합니다.
+          setMyParties(res.result);
+        } else {
+          setMyParties([]);
+        }
+      } catch (error) {
+        console.error('내 파티 목록을 불러오는데 실패했습니다.', error);
+        setMyParties([]);
+      }
+    };
+
+    fetchMyParties();
+  }, []);
+
+  const handleNavigation = (path) => nav(path);
 
   // ▼▼▼ 수정된 부분: 핸들러 함수들 ▼▼▼
   const handleOpenAddToCartModal = () => {
@@ -140,11 +143,14 @@ export default function PartyRecommend() {
       return { ...prev, [packageId]: newSelection };
     });
   };
-
+  // ✨ PartySelectSheet에 맞는 형태로 데이터를 매핑합니다.
+  const partiesForSelectSheet = myParties.map((party) => ({
+    id: party.partyId,
+    name: party.partyName,
+  }));
   return (
     <main className={' h-full min-h-screen mx-auto font-pretendard flex flex-col  bg-[#F8F8F8]'}>
       {/* 상단 UI */}
-
       <div className="relative px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 overflow-hidden bg-[#181A1C] text-white">
         <img src={PartyBg} alt="Party Background" className="absolute inset-0 z-0 object-cover w-full h-full" />
         <div className="relative z-10">
@@ -168,7 +174,6 @@ export default function PartyRecommend() {
       </div>
       {hasActiveParty && (
         <section className="relative px-4 pt-6 pb-10 overflow-hidden -mt-5 rounded-t-[1.125rem] bg-[#E2DEFF]">
-          {/* 2. img가 세로로 늘어나지 않도록 스타일 수정 */}
           <img
             src={MyPartyBg}
             alt="My Party Background"
@@ -177,7 +182,13 @@ export default function PartyRecommend() {
           <div className="relative z-10">
             <h2 className="text-[1.125rem] font-pretendard font-semibold text-[#191A1C] mb-3">나만의 파티 준비</h2>
             <div className="flex justify-center">
-              <PartyCardClose title="프로포즈" progress={0.05} />
+              {/* ✨ 첫 번째 파티 데이터를 PartyCardClose에 전달 */}
+              <PartyCardClose
+                partyId={myParties[0].partyId} // ✨ 1. partyId를 prop으로 전달
+                title={myParties[0].partyName}
+                progress={myParties[0].progressRate / 100} // progress는 0~1 사이 값이므로 100으로 나눔
+                tasks={myParties[0].todoResponses}
+              />
             </div>
           </div>
         </section>
@@ -221,15 +232,18 @@ export default function PartyRecommend() {
         cancelText="기존 파티에 추가"
         onCancel={handleSelectExistingParty}
       />
-
       {/* 2. 새 파티 추가 바텀시트 */}
       <BottomSheet open={modalStep === 'addParty'} onClose={() => setModalStep(null)}>
         <PartyAddSheet onAddParty={handleAddParty} />
       </BottomSheet>
-
       {/* 3. 기존 파티 선택 바텀시트 */}
+      {/* ✨ 기존 파티 선택 바텀시트: API 데이터와 연결 */}{' '}
       <BottomSheet open={modalStep === 'selectParty'} onClose={() => setModalStep(null)}>
-        <PartySelectSheet parties={userParties} onSelectParty={handleSelectParty} />
+        {' '}
+        <PartySelectSheet
+          parties={partiesForSelectSheet} // 매핑된 데이터 사용
+          onSelectParty={handleSelectParty}
+        />{' '}
       </BottomSheet>
       {/* ▲▲▲ 수정된 부분 ▲▲▲ */}
     </main>

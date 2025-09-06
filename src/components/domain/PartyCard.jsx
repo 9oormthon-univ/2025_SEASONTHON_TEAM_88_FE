@@ -4,13 +4,33 @@ import giftbox from '../../assets/icons/giftbox.svg';
 import { ReactComponent as CheckGray } from '../../assets/icons/check-round(gray).svg?react';
 import { ReactComponent as CheckPurple } from '../../assets/icons/check-round.svg?react';
 import ConfirmModal from '../ui/ConfirmModal';
+import { createTodo, updateTodoStatus } from '../../apis/todoApi';
 
-export default function PartyCard({ title, tasks = [], onAdd, onDelete, onProgressChange }) {
-  const [items, setItems] = useState(tasks);
+export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete, onProgressChange }) {
+  // ✨ 1. items: 화면에 표시될 텍스트(string) 배열
+  const [items, setItems] = useState([]);
+  // ✨ 2. checked: 각 항목의 체크 여부를 관리하는 객체
   const [checked, setChecked] = useState({});
+
   const [adding, setAdding] = useState(false);
   const [newText, setNewText] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // ✨ 3. tasks prop(객체 배열)이 변경될 때마다 UI 상태를 재설정하는 useEffect
+  useEffect(() => {
+    if (tasks && tasks.length > 0) {
+      // API 응답 객체에서 화면에 표시할 텍스트(task 또는 productName)만 추출
+      const mappedItems = tasks.map((task) => task.task || task.productName).filter(Boolean);
+      setItems(mappedItems);
+
+      // API 응답 객체의 isCompleted 값을 기반으로 초기 체크 상태를 설정
+      const initialChecked = tasks.reduce((acc, task, index) => {
+        acc[index] = task.isCompleted;
+        return acc;
+      }, {});
+      setChecked(initialChecked);
+    }
+  }, [tasks]); // tasks 배열이 바뀔 때마다 이 효과를 다시 실행
 
   // 진행률
   const total = items.length;
@@ -52,15 +72,32 @@ export default function PartyCard({ title, tasks = [], onAdd, onDelete, onProgre
     setAdding(false);
     setNewText('');
   };
-  const commitAdd = () => {
-    const t = newText.trim();
-    if (!t) return;
-    setItems((prev) => [...prev, t]);
-    setNewText('');
-    setAdding(false);
-    onAdd?.(t);
-  };
 
+  // ✨ 3. '리스트 추가하기' API 호출 로직
+  const commitAdd = async () => {
+    const t = newText.trim();
+    if (!t || !partyId) return; // partyId가 없으면 실행하지 않음
+
+    try {
+      // API 호출
+      const response = await createTodo({ partyId: partyId, task: t });
+
+      if (response.isSuccess) {
+        // API 호출 성공 시 UI 업데이트
+        setItems((prev) => [...prev, t]);
+        setNewText('');
+        setAdding(false);
+        onAdd?.(t); // (선택) 부모 컴포넌트에 알림
+      } else {
+        // (선택) API 에러 처리 (예: 사용자에게 알림)
+        console.error('Todo 추가 실패:', response.message);
+      }
+    } catch (error) {
+      {
+        console.error('Todo 추가 API 호출 중 에러 발생:', error);
+      }
+    }
+  };
   const buttonDisabled = adding ? newText.trim().length === 0 : false;
 
   return (
