@@ -39,20 +39,20 @@ export const buildPartyRequestBody = ({ purpose, budget, who, specialMode, speci
     음료: 'DRINK',
     베이커리: 'BAKERY',
     떡: 'RICE_CAKE',
-    전통과자: 'TRADITIONAL_SNACK',
+    전통간식: 'TRADITIONAL_SNACK', // '전통과자' -> '전통간식'
     초콜릿: 'CHOCOLATE',
     사탕: 'CANDY',
     건강식품: 'HEALTHY_FOOD',
-    선물세트: 'PRESENT_SET',
-
+    // '선물세트'는 현재 UI에 없어 제외
     // 소품
     풍선: 'BALLOON',
     가랜드: 'GARLAND',
-    배너: 'BANNER',
-    테이블장식: 'TABLE_DECOR',
-    식기: 'TABLEWARE',
-    '꽃/식물': 'FLOWER_PLANT',
-    초: 'CANDLE',
+    캔들: 'CANDLE', // '초' -> '캔들'
+    현수막: 'BANNER',
+    '꽃/화분': 'FLOWER_PLANT', // '꽃/식물' -> '꽃/화분'
+    테이블웨어: 'TABLEWARE',
+    // '테이블장식'은 현재 UI에 없어 제외
+    // '조명', '장식', '키트'는 백엔드 Enum에 없어 제외
 
     // 주얼리
     반지: 'RING',
@@ -60,13 +60,15 @@ export const buildPartyRequestBody = ({ purpose, budget, who, specialMode, speci
     귀걸이: 'EARRINGS',
     목걸이: 'NECKLACE',
     발찌: 'ANKLET',
+    // '헤어 악세사리', '커플세트', '시계'는 백엔드 Enum에 없어 제외
 
     // 문구
-    '카드/편지지': 'CARD_LETTER',
-    선물포장: 'GIFT_WRAP',
-    폰케이스: 'PHONE_CASE',
+    카드: 'CARD_LETTER', // '카드/편지지' -> '카드', '편지지'로 분리
+    포장: 'GIFT_WRAP',
+    '휴대폰 케이스': 'PHONE_CASE', // '폰케이스' -> '휴대폰 케이스'
     그립톡: 'GRIPTOK',
     스티커: 'STICKER',
+    // '키링'은 백엔드 Enum에 없어 제외
   };
 
   const partyPurpose = partyPurposeMap[purpose] || 'OTHER';
@@ -81,5 +83,15 @@ export const buildPartyRequestBody = ({ purpose, budget, who, specialMode, speci
 export const submitSurvey = async (surveyData) => {
   const body = buildPartyRequestBody(surveyData);
   const response = await api.post('/parties/survey', body);
+  return response;
+};
+
+// ✨ 최종 패키지를 생성(저장)하는 API 함수 추가
+export const createPartyPackage = async (packageData) => {
+  const body = {
+    packageName: packageData.packageName,
+    wishListItems: packageData.productIds, // API 명세에 따라 wishListItems 키 사용
+  };
+  const response = await api.post('/parties', body);
   return response;
 };
