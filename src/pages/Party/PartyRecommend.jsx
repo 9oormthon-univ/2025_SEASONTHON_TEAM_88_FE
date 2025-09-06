@@ -36,6 +36,7 @@ const userParties = [
   { id: 'p1', name: '프로포즈' },
   { id: 'p2', name: '기본 폴더' },
 ];
+
 const PACKAGES = [
   {
     id: 'pkg1',
@@ -78,7 +79,7 @@ export default function PartyRecommend() {
   const [myParties, setMyParties] = useState([]);
   const [selectedItems, setSelectedItems] = useState({ pkg2: [1, 2, 3] });
   const [modalStep, setModalStep] = useState(null);
-
+  const [itemsToAdd, setItemsToAdd] = useState([]);
   // ✨ myParties 배열의 길이를 기반으로 파티 유무를 결정
   const hasActiveParty = myParties.length > 0;
 
@@ -110,8 +111,13 @@ export default function PartyRecommend() {
   const handleNavigation = (path) => nav(path);
 
   // ▼▼▼ 수정된 부분: 핸들러 함수들 ▼▼▼
-  const handleOpenAddToCartModal = () => {
-    setModalStep('selectAction');
+  const handleOpenAddToCartModal = (items) => {
+    if (items.length === 0) {
+      alert('먼저 패키지에서 아이템을 선택해주세요.');
+      return;
+    }
+    setItemsToAdd(items); // 전달받은 아이템들을 임시 state에 저장
+    setModalStep('selectAction'); // 다음 단계인 모달 열기
   };
 
   const handleSelectNewParty = () => {
@@ -123,14 +129,17 @@ export default function PartyRecommend() {
   };
 
   const handleAddParty = (partyName) => {
-    console.log('새 파티 생성:', partyName);
-    // TODO: 실제 파티 생성 로직
+    console.log(`새 파티 '${partyName}' 생성하며 아이템 추가:`, itemsToAdd);
+    // TODO: itemsToAdd와 partyName을 API로 보내는 로직
+    setItemsToAdd([]); // 임시 상태 초기화
     setModalStep(null); // 모든 모달/시트 닫기
   };
 
+  // 기존 파티 선택 로직: 임시 저장된 itemsToAdd를 사용합니다.
   const handleSelectParty = (partyId) => {
-    console.log('기존 파티에 추가:', partyId);
-    // TODO: 실제 파티 추가 로직
+    console.log(`기존 파티 '${partyId}'에 아이템 추가:`, itemsToAdd);
+    // TODO: itemsToAdd와 partyId를 API로 보내는 로직
+    setItemsToAdd([]); // 임시 상태 초기화
     setModalStep(null); // 모든 모달/시트 닫기
   };
   // ▲▲▲ 수정된 부분 ▲▲▲
@@ -215,7 +224,7 @@ export default function PartyRecommend() {
                 data={pkg}
                 selectedItems={selectedItems[pkg.id] || []}
                 onItemToggle={(itemId) => handleItemToggle(pkg.id, itemId)}
-                onAddToCart={handleOpenAddToCartModal}
+                onAddToCart={() => handleOpenAddToCartModal(selectedItems[pkg.id] || [])}
               />
             </div>
           ))}

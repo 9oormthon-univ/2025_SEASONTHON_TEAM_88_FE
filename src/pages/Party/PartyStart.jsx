@@ -181,6 +181,8 @@ export default function PartyStart() {
         const payload = { packageName: packageName.trim(), productIds };
 
         await createPartyPackage(payload);
+        console.log(payload);
+        console.log('성공');
         nav('/party');
       } catch (err) {
         console.error('파티 생성 실패', err);
@@ -253,7 +255,7 @@ export default function PartyStart() {
           {step === 0 || step === 6 ? (
             <button
               type="button"
-              onClick={step === 6 ? handleDone : handleNext}
+              onClick={handleNext}
               disabled={!stepDone}
               className={[
                 'w-full py-[0.6875rem] px-0 rounded-lg',

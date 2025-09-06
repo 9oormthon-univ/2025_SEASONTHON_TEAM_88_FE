@@ -6,52 +6,56 @@ import ConfirmModal from '../ui/ConfirmModal';
 import { createTodo, updateTodoStatus } from '../../apis/todoApi';
 
 export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete, onProgressChange }) {
-  // ✨ 1. 상태 관리를 internalTasks로 통일합니다.
   const [internalTasks, setInternalTasks] = useState([]);
-
   const [adding, setAdding] = useState(false);
   const [newText, setNewText] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  // 부모로부터 받은 tasks prop(API 응답)을 내부 상태에 맞게 매핑합니다.
+  const tasksJson = useMemo(() => JSON.stringify(tasks), [tasks]);
+
   useEffect(() => {
-    const mappedTasks = tasks
+    const tasksArray = JSON.parse(tasksJson);
+
+    // ✨ 1. 콘솔 로그 추가: 부모로부터 받은 원본 데이터를 확인합니다.
+    // 여기서 각 객체에 isCompleted 키와 그 값이 (true/false) 올바르게 들어오는지 확인하세요.
+    console.log('[PartyCard]  받은 원본 tasks:', tasksArray);
+
+    const mappedTasks = tasksArray
       .map((task) => ({
         id: task.todoId,
         text: task.task || task.productName,
-        isCompleted: task.isCompleted,
+        isCompleted: task.isCompleted, // 🚨 API 응답 키가 'isComplete'가 아닌 'isCompleted'가 맞는지 확인!
       }))
       .filter((item) => item.id && item.text);
 
-    setInternalTasks(mappedTasks);
-  }, [tasks]);
+    // ✨ 2. 콘솔 로그 추가: UI 상태로 변환된 최종 데이터를 확인합니다.
+    // 여기서 isCompleted 값이 제대로 매핑되었는지 확인하세요.
+    console.log('[PartyCard] UI용으로 매핑된 internalTasks:', mappedTasks);
 
-  // ✨ 2. 진행률 계산 로직을 internalTasks 기준으로 수정합니다.
+    setInternalTasks(mappedTasks);
+  }, [tasksJson]);
+
   const total = internalTasks.length;
   const checkedCount = useMemo(() => internalTasks.filter((task) => task.isCompleted).length, [internalTasks]);
   const ratio = total > 0 ? checkedCount / total : 0;
   const done = ratio >= 1;
 
-  useEffect(() => {
-    onProgressChange?.(ratio);
-  }, [ratio, onProgressChange]);
-
   const toggleCheck = async (todoId) => {
     const taskIndex = internalTasks.findIndex((t) => t.id === todoId);
     if (taskIndex === -1) return;
 
-    const taskToUpdate = internalTasks[taskIndex];
-    const newCompletedState = !taskToUpdate.isCompleted;
-
-    const updatedTasks = internalTasks.map((t) => (t.id === todoId ? { ...t, isCompleted: newCompletedState } : t));
-    setInternalTasks(updatedTasks);
+    const originalTasks = internalTasks;
+    const newCompletedState = !originalTasks[taskIndex].isCompleted;
 
     try {
       await updateTodoStatus(todoId, newCompletedState);
+      const updatedTasks = originalTasks.map((t) => (t.id === todoId ? { ...t, isCompleted: newCompletedState } : t));
+      setInternalTasks(updatedTasks);
+      const newCheckedCount = updatedTasks.filter((t) => t.isCompleted).length;
+      const newRatio = updatedTasks.length > 0 ? newCheckedCount / updatedTasks.length : 0;
+      onProgressChange?.(newRatio);
     } catch (error) {
-      console.error('상태 업데이트 실패. UI를 롤백합니다.');
-      const revertedTasks = internalTasks.map((t) => (t.id === todoId ? { ...t, isCompleted: !newCompletedState } : t));
-      setInternalTasks(revertedTasks);
+      console.error('상태 업데이트에 실패했습니다.', error);
     }
   };
 
@@ -69,15 +73,18 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
       const response = await createTodo({ partyId: partyId, task: t });
       if (response.isSuccess && response.result) {
         const newTodo = response.result;
-        // ✨ 3. 새 할 일을 추가할 때도 internalTasks 상태를 업데이트합니다.
-        setInternalTasks((prev) => [
-          ...prev,
+        const newTaskList = [
+          ...internalTasks,
           {
             id: newTodo.todoId,
             text: newTodo.task,
             isCompleted: newTodo.isCompleted,
           },
-        ]);
+        ];
+        setInternalTasks(newTaskList);
+        const newCheckedCount = newTaskList.filter((t) => t.isCompleted).length;
+        const newRatio = newTaskList.length > 0 ? newCheckedCount / newTaskList.length : 0;
+        onProgressChange?.(newRatio);
         setNewText('');
         setAdding(false);
         onAdd?.(t);
@@ -91,7 +98,6 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
 
   const buttonDisabled = adding ? newText.trim().length === 0 : false;
 
-  // (나머지 UI 및 스타일 코드는 동일)
   const BAR_TOTAL_REM = 18.5;
   const BAR_H_REM = 0.625;
   const BAR_R_REM = 1.0625;
@@ -169,7 +175,6 @@ export default function PartyCard({ partyId, title, tasks = [], onAdd, onDelete,
           </span>
         </div>
 
-        {/* ✨ 4. 렌더링 로직을 internalTasks 기준으로 수정합니다. */}
         <ul className="mt-3 space-y-2">
           {internalTasks.map((task) => {
             return (

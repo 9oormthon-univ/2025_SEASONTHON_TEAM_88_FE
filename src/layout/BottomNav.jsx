@@ -17,7 +17,7 @@ const BottomNav = () => {
   return (
     <nav
       style={{ boxShadow: '0 -3px 6px 0 rgba(0,0,0,0.05)' }}
-      className="fixed bottom-0 flex items-center justify-around w-full h-16 max-w-screen-sm -translate-x-1/2 bg-white left-1/2"
+      className="fixed bottom-0 z-50 flex items-center justify-around w-full h-16 max-w-screen-sm -translate-x-1/2 bg-white left-1/2"
     >
       {navItems.map((item) => {
         const isActive = activeTab === item.path;

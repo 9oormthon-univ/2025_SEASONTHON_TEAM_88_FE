@@ -93,5 +93,6 @@ export const createPartyPackage = async (packageData) => {
     wishListItems: packageData.productIds, // API 명세에 따라 wishListItems 키 사용
   };
   const response = await api.post('/parties', body);
+  console.log(response);
   return response;
 };
