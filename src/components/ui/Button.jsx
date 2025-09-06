@@ -2,8 +2,8 @@ import React from 'react';
 
 /**
  * 공용 버튼 컴포넌트
- * - variant: 'primary' | 'icon' | 'cta' | 'step'
- * - isActive: 활성/비활성 제어 (cta/step은 isActive=false면 disabled와 동일 동작)
+ * - variant: 'primary' | 'icon' | 'cta' | 'step' | 'wide'
+ * - isActive: 활성/비활성 제어 (cta/step/wide는 isActive=false면 disabled와 동일 동작)
  * - isFinal: 'step'일 때 마지막 단계(완료) 여부
  */
 const Button = ({
@@ -21,8 +21,8 @@ const Button = ({
 
   switch (variant) {
     /** =========================
-     *  CTA (예: 완료)
-     *  - 피그마 스펙: w-full, h-12, rounded-2xl
+     * CTA (예: 완료)
+     * - 피그마 스펙: w-full, h-12, rounded-2xl
      * ========================= */
     case 'cta': {
       combinedClasses += ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
@@ -34,9 +34,9 @@ const Button = ({
     }
 
     /** =========================
-     *  Step (다음/완료)
-     *  - 피그마 스펙: w-full, h-12, rounded-2xl
-     *  - 비활성: 연회색
+     * Step (다음/완료)
+     * - 피그마 스펙: w-full, h-12, rounded-2xl
+     * - 비활성: 연회색
      * ========================= */
     case 'step': {
       combinedClasses += ' w-full h-12 rounded-2xl font-pretendard text-[16px] font-semibold leading-[1.4rem] ';
@@ -50,7 +50,20 @@ const Button = ({
     }
 
     /** =========================
-     *  아이콘 버튼 (빠른 액션)
+     * Wide (너비가 정해진 버튼)
+     * ========================= */
+    case 'wide': {
+      combinedClasses +=
+        ' w-[20.5rem] py-[0.6875rem] px-0 rounded-lg font-pretendard text-[1rem] font-semibold leading-[1.4rem] ';
+      combinedClasses +=
+        isActive && !disabled
+          ? ' bg-[#8371FD] text-white hover:bg-[#6f60f0]'
+          : ' bg-[#81878B] text-white cursor-not-allowed'; // Updated inactive styles
+      break;
+    }
+
+    /** =========================
+     * 아이콘 버튼 (빠른 액션)
      * ========================= */
     case 'icon': {
       combinedClasses += ' w-full rounded-lg p-4 justify-between font-bold ';
@@ -61,7 +74,7 @@ const Button = ({
     }
 
     /** =========================
-     *  기본 Primary (토글/일반)
+     * 기본 Primary (토글/일반)
      * ========================= */
     case 'primary':
     default: {
@@ -78,7 +91,7 @@ const Button = ({
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled || (!isActive && (variant === 'cta' || variant === 'step'))}
+      disabled={disabled || (!isActive && (variant === 'cta' || variant === 'step' || variant === 'wide'))}
       className={combinedClasses}
       {...rest}
     >
