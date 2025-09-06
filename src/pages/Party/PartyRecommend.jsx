@@ -7,17 +7,17 @@ import imgEarring from '../../assets/images/card.svg';
 import badgeGift from '../../assets/images/bear.svg'; // 진행 카드 아이콘으로 다시 사용
 import bannerImg from '../../assets/images/special_banner.svg';
 
-import ideaBouquet from '../../assets/images/bouquet.svg';
-import ideaCandle from '../../assets/images/candle.svg';
-import ideaFlower from '../../assets/images/flower.svg';
-import ideaDiffuser from '../../assets/images/diffuser.svg';
-import ideaCard from '../../assets/images/card.svg';
-import ideaChoco from '../../assets/images/choco.svg';
+// import ideaBouquet from '../../assets/images/bouquet.svg';
+// import ideaCandle from '../../assets/images/candle.svg';
+// import ideaFlower from '../../assets/images/flower.svg';
+// import ideaDiffuser from '../../assets/images/diffuser.svg';
+// import ideaCard from '../../assets/images/card.svg';
+// import ideaChoco from '../../assets/images/choco.svg';
 
-import prodFlower from '../../assets/images/flower.svg';
-import prodCard from '../../assets/images/card.svg';
-import prodCandle from '../../assets/images/candle.svg';
-import prodTea from '../../assets/images/tea.svg';
+// import prodFlower from '../../assets/images/flower.svg';
+// import prodCard from '../../assets/images/card.svg';
+// import prodCandle from '../../assets/images/candle.svg';
+// import prodTea from '../../assets/images/tea.svg';
 
 import PartyBg from '../../assets/images/partybg.svg'; // 헤더 배경 이미지
 import PackageCard from '../../components/domain/PackageCard';
@@ -31,6 +31,16 @@ import PartyAddSheet from '../../components/domain/PartyAddSheet';
 import PartySelectSheet from '../../components/domain/PartySelectSheet';
 import { getMyParties } from '../../apis/partyApi';
 
+import a from '../../assets/images/pacakage/1.png';
+import b from '../../assets/images/pacakage/2.png';
+import c from '../../assets/images/pacakage/3.png';
+import d from '../../assets/images/pacakage/4.png';
+import e from '../../assets/images/pacakage/5.png';
+import f from '../../assets/images/pacakage/6.png';
+import g from '../../assets/images/pacakage/7.png';
+import h from '../../assets/images/pacakage/8.png';
+import i from '../../assets/images/pacakage/9.png';
+
 // 파티 정보
 const userParties = [
   { id: 'p1', name: '프로포즈' },
@@ -42,33 +52,33 @@ const PACKAGES = [
     id: 'pkg1',
     title: '어버이날 패키지',
     emoji: '🥰',
-    compose: '꽃다발, 케이크, 감사카드',
+    compose: '꽃다발, 케이크, 음료',
     items: [
-      { id: 1, label: '카네이션', name: '마음을 전하는 생화', price: 21000, img: imgEarring },
-      { id: 2, label: '레터링 케이크', name: '세상에 하나뿐인 케이크', price: 20000, img: imgEarring },
-      { id: 3, label: '감사카드', name: '진심을 담은 손편지', price: 4000, img: imgEarring },
+      { id: 1, label: '꽃다발', name: '카네이션 꽃다발', price: 21000, img: a },
+      { id: 2, label: '케이크', name: '어버이날 케이크', price: 20000, img: b },
+      { id: 3, label: '음료', name: '건강 차 세트', price: 14000, img: c },
     ],
   },
   {
     id: 'pkg2',
-    title: '로맨틱 프로포즈 패키지',
-    emoji: '💍',
-    compose: '커플링, 꽃다발, 향초',
+    title: '졸업 축하 패키지',
+    emoji: '🎓',
+    compose: '꽃다발, 풍선, 목걸이',
     items: [
-      { id: 1, label: '커플링', name: '라브앤프로포즈 커플 반지', price: 45000, img: imgEarring },
-      { id: 2, label: '장미 꽃다발', name: '플로리스트엣닷 프리미엄', price: 32000, img: imgEarring },
-      { id: 3, label: '향초', name: '파티메이커 홈파티 키트', price: 32000, img: imgEarring },
+      { id: 1, label: '꽃다발', name: '풍성 졸업 꽃다발', price: 28000, img: d },
+      { id: 2, label: '풍선', name: '졸업 축하 풍선', price: 15000, img: e },
+      { id: 3, label: '목걸이', name: '실버 심플 목걸이', price: 19000, img: f },
     ],
   },
   {
     id: 'pkg3',
-    title: '생일 축하 패키지',
-    emoji: '🎉',
-    compose: '케이크, 선물, 축하카드',
+    title: '홈파티 패키지',
+    emoji: '🏠',
+    compose: '베이커리, 음료, 가랜드',
     items: [
-      { id: 1, label: '생일 케이크', name: '특별한 날을 위한 케이크', price: 25000, img: imgEarring },
-      { id: 2, label: '향초', name: '분위기 있는 선물', price: 18000, img: imgEarring },
-      { id: 3, label: '티 세트', name: '로맨틱 티타임 세트', price: 14000, img: imgEarring },
+      { id: 1, label: '베이커리', name: '브리오슈 4입', price: 4000, img: g },
+      { id: 2, label: '음료', name: '프루티 스파클링', price: 18000, img: h },
+      { id: 3, label: '가랜드', name: '파스텔 홈파티 가랜드', price: 10000, img: i },
     ],
   },
 ];
@@ -166,10 +176,14 @@ export default function PartyRecommend() {
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="mt-2 text-[18px] font-semibold">토리님의 파티 공간이에요</h1>
-              <p className="mt-1 text-[12px] text-white/70">나만의 파티를 추가해 보거나, 기존 파티를 관리해보세요.</p>
+              <h1 className="mt-2 text-[1.125rem] font-semibold font-pretendard whitespace-nowrap">
+                토리님의 파티 공간이에요
+              </h1>
+              <p className="mt-1 text-[0.75rem] font-pretendard font-normal w-[10rem] text-white/70">
+                나만의 파티를 추가로 만들거나, 기존 파티를 관리해보세요.
+              </p>
             </div>
-            <Icon name="giftbox-ribbon" className="w-[8rem] h-[8rem] flex-shrink-0" />
+            <Icon name="giftbox-ribbon" className="w-[10rem] h-[8rem] right-0 flex-shrink-0" />
           </div>
         </div>
       </div>

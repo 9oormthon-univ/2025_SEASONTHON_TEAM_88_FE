@@ -107,7 +107,7 @@ export default function PackageCard({
   const renderSimpleItemList = () => (
     <div className="flex w-full gap-3 mt-4">
       {data.items.map((it) => (
-        <div key={it.id} className="w-[100px]">
+        <div key={it.id} className="w-[83px]">
           <img
             src={it.img}
             alt={it.name}
